@@ -31,10 +31,10 @@ namespace GGJ_2026.Machines
 
         private void Start()
         {
-            if (_minigameCanvas != null)
-            {
-                _minigameCanvas.SetActive(false);
-            }
+            //if (_minigameCanvas != null)
+            //{
+            //    _minigameCanvas.SetActive(false);
+            //}
         }
 
         private void Update()
@@ -106,8 +106,8 @@ namespace GGJ_2026.Machines
         {
             _isMinigameActive = false;
             _isSessionFinished = false;
-            if (_minigameCanvas != null)
-                _minigameCanvas.SetActive(false);
+            //if (_minigameCanvas != null)
+            //    _minigameCanvas.SetActive(false);
         }
 
         private void HandleMiniGame()

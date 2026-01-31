@@ -78,7 +78,7 @@ namespace GGJ_2026.Player
             //}
 
             // Gravity
-            _velocity.y += _gravity * Time.deltaTime;
+            //_velocity.y += _gravity * Time.deltaTime;
             _controller.Move(_velocity * Time.deltaTime);
         }
 

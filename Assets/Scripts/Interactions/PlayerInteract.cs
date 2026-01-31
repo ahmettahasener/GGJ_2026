@@ -220,6 +220,7 @@ namespace GGJ_2026.Interactions
 
         private IEnumerator MoveCameraToOriginal()
         {
+            Debug.Log("MoveCameraToOriginal çalýþtý.");
             Vector3 startPos = _cam.transform.position;
             Quaternion startRot = _cam.transform.rotation;
 

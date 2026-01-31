@@ -35,10 +35,10 @@ namespace GGJ_2026.Machines
 
         private void Start()
         {
-            if (_minigameCanvas != null)
-            {
-                _minigameCanvas.SetActive(false);
-            }
+            //if (_minigameCanvas != null)
+            //{
+            //    _minigameCanvas.SetActive(false);
+            //}
         }
 
         private void Update()
@@ -108,8 +108,8 @@ namespace GGJ_2026.Machines
             
             _targetRect.anchoredPosition = new Vector2(_targetRect.anchoredPosition.x, randomY);
 
-            // Reset Player Position to center
-            _playerRect.anchoredPosition = new Vector2(_playerRect.anchoredPosition.x, 0f);
+            //// Reset Player Position to center
+            //_playerRect.anchoredPosition = new Vector2(_playerRect.anchoredPosition.x, 0f);
 
             Debug.Log($"Radio Mini-game Started. Target Y: {randomY} (Range: +/- {safeRangeY})");
         }
@@ -130,8 +130,8 @@ namespace GGJ_2026.Machines
         {
             _isMinigameActive = false;
             _isSessionFinished = false;
-            if (_minigameCanvas != null)
-                _minigameCanvas.SetActive(false);
+            //if (_minigameCanvas != null)
+            //    _minigameCanvas.SetActive(false);
         }
 
         private void HandleMiniGame()
@@ -147,7 +147,7 @@ namespace GGJ_2026.Machines
             }
 
             // 1. Player Physics (Gravity vs Jump)
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Space))
             {
                 _playerVelocityY += _liftForce * dt;
             }

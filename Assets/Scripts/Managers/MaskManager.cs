@@ -169,6 +169,7 @@ namespace GGJ_2026.Managers
             {
                 if (_spawnedMasks[i] != null)
                 {
+                    Debug.Log(_spawnedMasks[i] + " card destroyed.");
                     Destroy(_spawnedMasks[i]);
                 }
             }
