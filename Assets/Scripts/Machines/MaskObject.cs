@@ -16,6 +16,7 @@ namespace GGJ_2026.Machines
 
         public string InteractionPrompt => $"Press E to choose: {_maskData?.MaskName}";
         public Transform InteractionViewPoint => _viewPoint;
+        public bool UseCameraFocus => false; // Masks don't lock camera
 
         public void Initialize(MaskData data)
         {

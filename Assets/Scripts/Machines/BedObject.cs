@@ -11,6 +11,8 @@ namespace GGJ_2026.Machines
         public string InteractionPrompt => "Press \"E\" to Sleep";
         public Transform InteractionViewPoint => _viewPoint;
 
+        public bool UseCameraFocus => throw new System.NotImplementedException();
+
         public void OnInteract()
         {
             if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Gameplay)

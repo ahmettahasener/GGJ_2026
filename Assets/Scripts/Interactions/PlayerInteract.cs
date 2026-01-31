@@ -20,6 +20,7 @@ namespace GGJ_2026.Interactions
 
         private GGJ_2026.Player.PlayerMovement _playerMovement;
         private bool _isInteracting = false;
+        private bool _isFocused = false; // Tracks if we are in a camera-locked state
 
         // Camera State
         private Vector3 _originalLocalPos;
@@ -27,6 +28,7 @@ namespace GGJ_2026.Interactions
         private Coroutine _cameraCoroutine;
 
         private MaskManager maskManager;
+
         private void Awake()
         {
             _cam = Camera.main;
@@ -37,15 +39,20 @@ namespace GGJ_2026.Interactions
 
             _playerMovement = GetComponent<GGJ_2026.Player.PlayerMovement>();
 
-            maskManager = FindAnyObjectByType<MaskManager>();
+            // Find MaskManager safely
+            maskManager = FindObjectOfType<MaskManager>();
         }
+
         private void OnEnable()
         {
-            maskManager.cardSelectedEvent += ExitInteraction;
+            if (maskManager != null)
+                maskManager.cardSelectedEvent += ExitInteraction;
         }
+
         private void OnDisable()
         {
-            maskManager.cardSelectedEvent -= ExitInteraction;
+            if (maskManager != null)
+                maskManager.cardSelectedEvent -= ExitInteraction;
         }
 
         private void Update()
@@ -56,6 +63,14 @@ namespace GGJ_2026.Interactions
                 HandleExitInput();
                 if (_currentInteractable != null)
                 {
+                    // Enforce cursor for minigames that need it
+                    // Only enforce if we are FOCUSED (i.e., minigame mode)
+                    if (_isFocused) 
+                    {
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
+                    }
+                    
                     _currentInteractable.OnInteractStay();
                 }
                 return;
@@ -73,9 +88,6 @@ namespace GGJ_2026.Interactions
         private void HandleExitInput()
         {
             // Block ESC if we are in EndNight state (handled by GameManager logic or check here)
-            // But getting GameManager dependency here might be circular or messy. 
-            // We'll rely on GameManager preventing input or this script dealing with it.
-            // But user asked to "disable ESC".
             if (Managers.GameManager.Instance != null && Managers.GameManager.Instance.CurrentState == Managers.GameState.EndNight)
             {
                 return;
@@ -96,17 +108,24 @@ namespace GGJ_2026.Interactions
                 _currentInteractable.OnExit();
             }
 
-            // Start smooth return
-            if (_cameraCoroutine != null) StopCoroutine(_cameraCoroutine);
-            _cameraCoroutine = StartCoroutine(MoveCameraToOriginal());
+            // Only move camera back if we were actually focused
+            if (_isFocused)
+            {
+                _isFocused = false;
 
-            // UI update
-             UpdateUI(false);
+                // Start smooth return
+                if (_cameraCoroutine != null) StopCoroutine(_cameraCoroutine);
+                _cameraCoroutine = StartCoroutine(MoveCameraToOriginal());
+            }
+            else
+            {
+                // UI update just in case
+                UpdateUI(false);
+            }
         }
 
         private void HandleRaycast()
         {
-            // Standard raycast code...
             Ray ray = new Ray(_cam.transform.position, _cam.transform.forward);
             if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _interactionLayer))
             {
@@ -169,6 +188,17 @@ namespace GGJ_2026.Interactions
             // Hide Prompt
             UpdateUI(false);
 
+            // Check if this interaction requires camera focus
+            if (!_currentInteractable.UseCameraFocus)
+            {
+                _isFocused = false;
+                // Do NOT lock movement or cursor
+                // Do NOT move camera
+                return;
+            }
+
+            _isFocused = true;
+
             // Disable Movement & Unlock Cursor
             if (_playerMovement != null)
             {
@@ -200,9 +230,6 @@ namespace GGJ_2026.Interactions
 
             while (time < _transitionDuration)
             {
-                // If we exit mid-transition, loop breaks because _isInteracting goes false? 
-                // No, ExitInteraction starts a new coroutine which stops this one.
-                
                 time += Time.deltaTime;
                 float t = time / _transitionDuration;
                 float curveValue = _transitionCurve.Evaluate(t);
@@ -220,16 +247,10 @@ namespace GGJ_2026.Interactions
 
         private IEnumerator MoveCameraToOriginal()
         {
-            Debug.Log("MoveCameraToOriginal çalýþtý.");
             Vector3 startPos = _cam.transform.position;
             Quaternion startRot = _cam.transform.rotation;
 
-            // We want to return to local coordinates relative to the player parent logic, 
-            // but simply putting it back to saved locals relative to parent is enough 
-            // because parent hasn't moved (control locked).
-            
-            // However, Lerp needs World Space end goals if we are moving in world space.
-            // _cam.transform.parent should be the Player object.
+            // Move back to cached local position relative to player
             Transform parent = _cam.transform.parent;
             Vector3 targetPos = parent.TransformPoint(_originalLocalPos);
             Quaternion targetRot = parent.rotation * _originalLocalRot;
@@ -258,18 +279,21 @@ namespace GGJ_2026.Interactions
                 _playerMovement.SetControl(true);
             }
         }
+        
         public void LockAndMovePlayerTo(Transform playerTarget)
         {
             if (_cameraCoroutine != null)
                 StopCoroutine(_cameraCoroutine);
 
             _isInteracting = true;
+            _isFocused = true; // Assume this locks interactions too
 
             if (_playerMovement != null)
                 _playerMovement.SetControl(false);
 
             _cameraCoroutine = StartCoroutine(MovePlayerTo(playerTarget));
         }
+
         private IEnumerator MovePlayerTo(Transform target)
         {
             Transform player = transform;
@@ -304,9 +328,10 @@ namespace GGJ_2026.Interactions
             player.position = target.position;
             player.rotation = target.rotation;
         }
+
         public void FreePlayer()
         {
-            // Re-enable controls AFTER camera is back
+            // Re-enable controls
             if (_playerMovement != null)
             {
                 _playerMovement.SetControl(true);

@@ -11,6 +11,7 @@
 - [x] **PlayerInteract:** Implement Raycast system and 'E' key interaction.
 - [x] **MachineBase:** Create abstract base class for machines (Electricity consumption).
 - [x] **OverlayUI:** Implement Reticle and Interaction Prompts.
+- [x] **PlayerInteract:** Refactored for optional Camera Focus (Masks/Doors don't lock camera).
 
 ## [X] Milestone 3: Machine Mechanics
 - [x] **RadioMachine:** Refactored to 10s gravity-based minigame with World Canvas.
