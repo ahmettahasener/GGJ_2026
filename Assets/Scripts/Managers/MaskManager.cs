@@ -1,7 +1,8 @@
-using UnityEngine;
-using System.Collections.Generic;
 using GGJ_2026.Data;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GGJ_2026.Managers
 {
@@ -13,6 +14,9 @@ namespace GGJ_2026.Managers
         [SerializeField] private List<MaskData> _allMasks;
 
         public MaskData ActiveMask { get; private set; }
+
+        private Coroutine _clearRoutine;
+
 
         private void Awake()
         {
@@ -35,39 +39,37 @@ namespace GGJ_2026.Managers
 
         public void StartSelectionPhase()
         {
-            ClearSpawnedMasks();
+            ClearSpawnedMasksImmediate();
 
             List<MaskData> options = GetRandomMasks(3);
             if (options.Count == 0 || _maskObjectPrefab == null)
-            {
-                Debug.LogWarning("Cannot spawn masks: No Data or Prefab missing.");
                 return;
-            }
 
             for (int i = 0; i < options.Count; i++)
             {
                 if (i >= _spawnPoints.Length) break;
 
-                GameObject obj = Instantiate(_maskObjectPrefab, _spawnPoints[i].position, _spawnPoints[i].rotation);
-                
-                // Set Data
+                GameObject obj = Instantiate(
+                    _maskObjectPrefab,
+                    _spawnPoints[i].position,
+                    _spawnPoints[i].rotation
+                );
+
                 var maskScript = obj.GetComponent<Machines.MaskObject>();
                 if (maskScript != null)
-                {
                     maskScript.Initialize(options[i]);
-                }
 
                 _spawnedMasks.Add(obj);
+
+                Debug.Log($"Spawned {_spawnedMasks.Count} masks for selection.");
             }
-            
-            Debug.Log($"Spawned {_spawnedMasks.Count} masks for selection.");
         }
 
         public void SelectMaskFromObject(MaskData mask)
         {
             ActivateMask(mask);
             ApplyMaskEffects(mask);
-            ClearSpawnedMasks();
+            ClearSpawnedMasksDelayed();
             
             if (GameManager.Instance != null)
             {
@@ -124,18 +126,51 @@ namespace GGJ_2026.Managers
 
             Debug.Log($"Mask Effects Applied for: {mask.MaskName}");
         }
-
-        private void ClearSpawnedMasks()
+        private void ClearSpawnedMasksImmediate()
         {
-            //// Reverse loop to safely destroy
-            //for (int i = _spawnedMasks.Count - 1; i >= 0; i--)
-            //{
-            //    if (_spawnedMasks[i] != null)
-            //    {
-            //        Destroy(_spawnedMasks[i]);
-            //    }
-            //}
-            //_spawnedMasks.Clear();
+            for (int i = _spawnedMasks.Count - 1; i >= 0; i--)
+            {
+                if (_spawnedMasks[i] != null)
+                {
+                    Destroy(_spawnedMasks[i]);
+                }
+            }
+
+            _spawnedMasks.Clear();
+        }
+        private void ClearSpawnedMasksDelayed()
+        {
+            if (_clearRoutine != null)
+                StopCoroutine(_clearRoutine);
+
+            _clearRoutine = StartCoroutine(ClearSpawnedMasksRoutine());
+        }
+
+        private IEnumerator ClearSpawnedMasksRoutine()
+        {
+            // Interaction'ı kapat
+            foreach (var mask in _spawnedMasks)
+            {
+                if (mask == null) continue;
+
+                var col = mask.GetComponent<Collider>();
+                if (col != null)
+                    col.enabled = false;
+            }
+
+            // Interaction sisteminin frame’i bitsin
+            yield return null;
+
+            // Destroy
+            for (int i = _spawnedMasks.Count - 1; i >= 0; i--)
+            {
+                if (_spawnedMasks[i] != null)
+                {
+                    Destroy(_spawnedMasks[i]);
+                }
+            }
+
+            _spawnedMasks.Clear();
         }
 
         // --- Helper Methods ---
