@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using GGJ_2026.UI;
 
 namespace GGJ_2026.Managers
 {
@@ -66,9 +67,18 @@ namespace GGJ_2026.Managers
             }
         }
 
+        public int CurrentNight { get; private set; } = 1;
+
         private void HandleMaskSelection()
         {
-            Debug.Log("Mask Selection Phase Started.");
+            Debug.Log($"Mask Selection Phase Started. Night: {CurrentNight}");
+            
+            // Re-enable cursor for selection? 
+            // MaskManager uses physical objects now, so we need Player Control!
+            // But we need to UNLOCK cursor for interaction?
+            // Actually, PlayerMovement locks cursor. 
+            // Interaction system detects object -> E -> Animation.
+            // So we just need to ensure Player is free to move.
             
             if (MaskManager.Instance != null)
             {
@@ -76,75 +86,108 @@ namespace GGJ_2026.Managers
             }
         }
 
-        // Called by UI
+        // Called by MaskManager
         public void ConfirmMaskSelection(Data.MaskData selectedMask)
         {
-            if (MaskManager.Instance != null)
-                MaskManager.Instance.ActivateMask(selectedMask);
-            
+            // Already handled in MaskManager selecting it then calling ChangeState
             ChangeState(GameState.Gameplay);
         }
 
         private void HandleGameplay()
         {
-            Debug.Log("Night Started! Good luck.");
+            Debug.Log($"Night {CurrentNight} Started! Good luck.");
             
-            // Note: Electricity Refill happens at the END of the previous night (or start of day logic)
-            // But for the very first night, we assume values are set in Inspector.
+            // Release Player if locked?
+            // PlayerMovement handles its own state usually.
         }
 
         public void EndNight()
         {
-            ChangeState(GameState.EndNight);
+            if (_currentState != GameState.EndNight)
+            {
+                ChangeState(GameState.EndNight);
+            }
         }
 
         private System.Collections.IEnumerator EndNightSequence()
         {
-            Debug.Log("Night Ending... Fading out (imagined).");
-            
-            // Simulate Fade Out time
-            yield return new WaitForSeconds(2.0f);
+            Debug.Log("Night Ending... Cinematic Sequence Start.");
 
+            // 1. Lock everything (ESC block handled in PlayerInteract now)
+            
+            // 2. Fade In Black (Screen goes dark immediately)
+            if (OverlayUI.Instance != null)
+            {
+                yield return StartCoroutine(OverlayUI.Instance.FadeIn(1.0f));
+            }
+            else
+            {
+                Debug.LogWarning("OverlayUI Instance not found!");
+                yield return new WaitForSeconds(1.0f);
+            }
+
+            // 3. Show Night Text
+            if (OverlayUI.Instance != null)
+            {
+                OverlayUI.Instance.SetNightText($"NIGHT {CurrentNight} SURVIVED");
+            }
+
+            // 4. Wait 3 seconds
+            yield return new WaitForSeconds(3.0f);
+
+            // 5. Calculations (Behind the curtain)
             CalculateNightResults();
             
-            // Check Win / Loss
+            // Win/Loss Checks
             if (CheckGameOver())
             {
                 ChangeState(GameState.GameOver);
-                yield break;
+                yield break; 
             }
             
             if (CheckGameWin())
             {
                 ChangeState(GameState.GameWin);
-                yield break;
+                yield break; 
             }
 
-            yield return new WaitForSeconds(1.0f); // Breathing room
-            StartNewNight();
+            // 6. Transition Logic
+            StartNewNight(); // Resets modifiers, increments night count
+            
+            if (OverlayUI.Instance != null)
+            {
+                OverlayUI.Instance.HideNightText();
+            }
+
+            // 7. Fade Out (Screen clears)
+            if (OverlayUI.Instance != null)
+            {
+                yield return StartCoroutine(OverlayUI.Instance.FadeOut(1.0f));
+            }
+
+            // 8. Auto-Release Player from Bed (Force Exit Interaction)
+            var playerInteract = FindObjectOfType<Interactions.PlayerInteract>();
+            if (playerInteract != null)
+            {
+                playerInteract.ForceExitInteraction();
+            }
         }
 
         private void CalculateNightResults()
         {
             if (ResourceManager.Instance != null)
             {
-                // 1. Sanity Drop (Base 10 + Random 0-10)
+                // 1. Sanity Drop
                 float sanityDrop = 10f + UnityEngine.Random.Range(0f, 10f);
                 ResourceManager.Instance.ModifySanity(-sanityDrop);
-                Debug.Log($"Sanity Dropped by {sanityDrop:F1}");
 
-                // 2. Monster Approach (Base 100 + Random 0-50) * Multiplier
+                // 2. Monster Approach
                 float baseMove = 100f + UnityEngine.Random.Range(0f, 50f);
                 float finalMove = baseMove * ResourceManager.Instance.MonsterAdvanceMultiplier;
-                
                 ResourceManager.Instance.ModifyDistance(-finalMove);
-                Debug.Log($"Monster moved {finalMove:F1}m closer (Base: {baseMove:F1}, Mult: {ResourceManager.Instance.MonsterAdvanceMultiplier}).");
 
-                // 3. Refill Electricity for Next Night
-                // If power is out, we might want to punish? But prompt says standard logic:
-                // "Restore to NextNightMaxElectricity (set by fuse repair or default)"
+                // 3. Refill Electricity
                 ResourceManager.Instance.RefillEnergyForNight(); 
-                Debug.Log("Electricity Refilled for next night.");
             }
         }
 
@@ -152,15 +195,8 @@ namespace GGJ_2026.Managers
         {
             if (ResourceManager.Instance != null)
             {
-                // Condition: Distance <= 0
                 if (ResourceManager.Instance.GetDistance() <= 0) return true;
-                
-                // Optional: Sanity <= 0?
-                if (ResourceManager.Instance.GetSanity() <= 0) 
-                {
-                    Debug.Log("Sanity reached 0! (Game Over condition potentially)");
-                    // return true; // Unleash if desired
-                }
+                if (ResourceManager.Instance.GetSanity() <= 0) return false; // Optional
             }
             return false;
         }
@@ -179,6 +215,7 @@ namespace GGJ_2026.Managers
             if (MaskManager.Instance != null)
                 MaskManager.Instance.ClearMask();
 
+            CurrentNight++;
             ChangeState(GameState.MaskSelection);
         }
     }

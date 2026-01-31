@@ -49,9 +49,22 @@ namespace GGJ_2026.Interactions
             HandleInput();
         }
 
+        public void ForceExitInteraction()
+        {
+            ExitInteraction();
+        }
+
         private void HandleExitInput()
         {
-            // Allow exiting even during transition
+            // Block ESC if we are in EndNight state (handled by GameManager logic or check here)
+            // But getting GameManager dependency here might be circular or messy. 
+            // We'll rely on GameManager preventing input or this script dealing with it.
+            // But user asked to "disable ESC".
+            if (Managers.GameManager.Instance != null && Managers.GameManager.Instance.CurrentState == Managers.GameState.EndNight)
+            {
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 ExitInteraction();
