@@ -9,8 +9,12 @@ namespace GGJ_2026.Machines
         [Header("Machine Settings")]
         [SerializeField] protected string _machineName = "Machine";
         [SerializeField] protected float _electricityCost = 10f;
+        
+        [Tooltip("The position/rotation where the camera should move to during interaction.")]
+        [SerializeField] protected Transform _interactionViewPoint;
 
         public string InteractionPrompt => $"Press \"E\" to use {_machineName}";
+        public Transform InteractionViewPoint => _interactionViewPoint;
 
         public virtual void OnInteract()
         {
