@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maskName: Efficient
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: d8d4d1560f5ce3149916b0e21df00df7, type: 3}
   _maskType: 2

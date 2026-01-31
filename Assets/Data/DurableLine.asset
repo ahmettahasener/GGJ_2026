@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maskName: Durable Line
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: 79d1a5eb2be51d94a906578b571e1a73, type: 3}
   _maskType: 5

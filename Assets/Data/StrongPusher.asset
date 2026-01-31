@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maskName: StrongPush
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: fcafb6ce33e5cc442a65c1f25334a049, type: 3}
   _maskType: 1
