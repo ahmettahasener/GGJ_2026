@@ -38,10 +38,14 @@ namespace GGJ_2026.Interactions
 
         private void Update()
         {
-            // If interacting, we wait for Exit command
+            // If interacting, we wait for Exit command AND allow internal logic
             if (_isInteracting)
             {
                 HandleExitInput();
+                if (_currentInteractable != null)
+                {
+                    _currentInteractable.OnInteractStay();
+                }
                 return;
             }
 
@@ -153,11 +157,15 @@ namespace GGJ_2026.Interactions
             // Hide Prompt
             UpdateUI(false);
 
-            // Disable Movement
+            // Disable Movement & Unlock Cursor
             if (_playerMovement != null)
             {
                 _playerMovement.SetControl(false);
             }
+            
+            // Explicitly ensure cursor is free for interaction (Double check)
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
             // Start Camera Move
             if (_currentInteractable.InteractionViewPoint != null)

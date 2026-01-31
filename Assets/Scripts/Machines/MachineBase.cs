@@ -22,6 +22,11 @@ namespace GGJ_2026.Machines
             UseMachine();
         }
 
+        public virtual void OnInteractStay()
+        {
+            // Optional override for mini-games
+        }
+
         public virtual void OnExit()
         {
             // Optional visual reset or UI hide logic if driven by machine

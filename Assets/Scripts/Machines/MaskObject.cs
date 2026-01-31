@@ -43,5 +43,10 @@ namespace GGJ_2026.Machines
         {
             // Optional: Close description UI if implemented
         }
+
+        public void OnInteractStay()
+        {
+            //throw new System.NotImplementedException();
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace GGJ_2026.Machines
         {
             // Optional: Any logic needed when cancelling sleep view?
         }
+
+        public void OnInteractStay()
+        {
+            // No operation needed
+        }
     }
 }
