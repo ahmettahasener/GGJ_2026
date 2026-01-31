@@ -13,7 +13,7 @@
 - [x] **OverlayUI:** Implement Reticle and Interaction Prompts.
 
 ## [X] Milestone 3: Machine Mechanics
-- [x] **RadioMachine:** Implement Frequency mechanism and Mini-game stub.
+- [x] **RadioMachine:** Refactored to 10s gravity-based minigame with World Canvas.
 - [x] **RadarMachine:** Implement Distance pushback and Fuse risk.
 - [x] **MedicineMachine:** Implement Sanity restoration.
 - [x] **DashboardUI:** Connect UI to ResourceManager events.

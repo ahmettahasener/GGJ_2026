@@ -1290,14 +1290,16 @@ MonoBehaviour:
   _machineName: RadioMachine
   _electricityCost: 10
   _interactionViewPoint: {fileID: 1131743143}
-  _frequencyGainSpeed: 5
+  _maxFrequencyReward: 20
   _electricityConsumptionRate: 2
-  _barGravity: 1
-  _barLiftForce: 2.5
-  _targetMoveSpeed: 1
-  _targetSize: 0.8
-  _playerBarVisual: {fileID: 90364832}
-  _targetBarVisual: {fileID: 1048360916}
+  _sessionDuration: 10
+  _gravity: 10
+  _liftForce: 15
+  _targetPadding: 10
+  _minigameCanvas: {fileID: 1957684527}
+  _backgroundRect: {fileID: 2084538686}
+  _targetRect: {fileID: 1048360916}
+  _playerRect: {fileID: 90364832}
 --- !u!65 &1128488250
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2080,7 +2082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1957684528
 MonoBehaviour:
   m_ObjectHideFlags: 0

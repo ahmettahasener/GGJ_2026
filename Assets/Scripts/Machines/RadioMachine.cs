@@ -6,32 +6,44 @@ namespace GGJ_2026.Machines
     public class RadioMachine : MachineBase
     {
         [Header("Radio Settings")]
-        [SerializeField] private float _frequencyGainSpeed = 5f; // How fast frequency fills
+        [SerializeField] private float _maxFrequencyReward = 20f; // Max frequency gained for 100% success
         [SerializeField] private float _electricityConsumptionRate = 2f; // Per second
 
-        [Header("Mini-Game Settings")]
-        [SerializeField] private float _barGravity = 2f;
-        [SerializeField] private float _barLiftForce = 5f;
-        [SerializeField] private float _targetMoveSpeed = 1f;
-        [SerializeField] private float _targetSize = 0.2f; // Percentage 0-1
+        [Header("Mini-Game Configuration")]
+        [SerializeField] private float _sessionDuration = 10f;
+        [SerializeField] private float _gravity = 800f; 
+        [SerializeField] private float _liftForce = 1200f;
+        [SerializeField] private float _targetPadding = 10f; // Extra padding inside background
+
+        [Header("UI References")]
+        [SerializeField] private GameObject _minigameCanvas; 
+        [SerializeField] private RectTransform _backgroundRect;
+        [SerializeField] private RectTransform _targetRect;
+        [SerializeField] private RectTransform _playerRect;
 
         // Mini-game State
         private bool _isMinigameActive = false;
-        private float _playerBarPos = 0.5f; // 0 to 1
-        private float _targetBarPos = 0.5f; // 0 to 1
-        private float _targetMoveTime = 0f;
+        private bool _isSessionFinished = false; // New state to freeze UI but keep it open
+        private float _playerVelocityY = 0f;
+        private float _sessionTimer = 0f;
+        private float _successTimer = 0f;
 
-        // UI References (Ideally these would be on a world-space canvas attached to the machine, 
-        // but for now we might use Overlay or Debug logs, or assume a local reference)
-        // For this task, I'll simulate the logic and log it, or assume there's a reference to a dedicated UI part.
-        // The prompt asks for logic. I will add local visual feedback references.
-        [Header("Visuals")]
-        [SerializeField] private Transform _playerBarVisual; // Y-axis scaled or moved
-        [SerializeField] private Transform _targetBarVisual; // Y-axis scaled or moved
+        // Cache height for performance
+        private float _bgHeight;
+        private float _targetHeight;
+        private float _playerHeight;
+
+        private void Start()
+        {
+            if (_minigameCanvas != null)
+            {
+                _minigameCanvas.SetActive(false);
+            }
+        }
 
         private void Update()
         {
-            if (_isMinigameActive)
+            if (_isMinigameActive && !_isSessionFinished)
             {
                 HandleMiniGame();
                 ConsumeElectricityOverTime();
@@ -41,113 +53,196 @@ namespace GGJ_2026.Machines
         public override void OnInteract()
         {
             base.OnInteract();
+            // Allow restart if finished, or toggle? 
+            // User flow: Interact -> Play 10s -> Freeze -> Interact to Close? Or Interact to Restart?
+            // "Makinadan çıkınca tekrardan o canvası kapatsın" -> implies OnExit closes.
+            // If we interact WHILE it's finished, maybe we restart?
             if (!_isMinigameActive)
             {
                 StartMiniGame();
-            }
-            else
-            {
-                StopMiniGame();
             }
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            StopMiniGame();
+            // Always close everything on exit
+            CloseMiniGameFully();
         }
 
         private void StartMiniGame()
         {
+            if (_minigameCanvas == null || _backgroundRect == null || _targetRect == null || _playerRect == null)
+            {
+                Debug.LogError("RadioMachine: UI References missing!");
+                return;
+            }
+
             _isMinigameActive = true;
-            Debug.Log("Radio Mini-game Started! Keep the bar on the target!");
+            _isSessionFinished = false;
+            _minigameCanvas.SetActive(true);
+
+            // Reset Timers
+            _sessionTimer = 0f;
+            _successTimer = 0f;
+            _playerVelocityY = 0f;
+
+            // Cache dimensions
+            _bgHeight = _backgroundRect.rect.height;
+            _targetHeight = _targetRect.rect.height;
+            _playerHeight = _playerRect.rect.height;
+
+            // 1. Randomize Target Position (Strict Bounds)
+            // Available vertical space for the CENTER of the target
+            // Total Height - Target Height gives the range of motion for the edges.
+            // Halve it for center offset from (0,0).
+            float safeRangeY = (_bgHeight - _targetHeight) * 0.5f;
             
-            // TODO: Lock Camera / Player Movement here. 
-            // Since we don't have a direct Player reference yet, we'll assume the player respects the state 
-            // or we lock the cursor.
-            Cursor.lockState = CursorLockMode.None; // Unlock to show mouse interactions if needed or just use keys
+            // Subtract padding to be extra safe
+            safeRangeY -= _targetPadding;
+
+            if (safeRangeY < 0) safeRangeY = 0; // Prevent negative range if target > bg
+
+            // Randomize between -Range and +Range (Assuming Center Pivot)
+            float randomY = Random.Range(-safeRangeY, safeRangeY);
             
-            // Better: If using First Person, we usually want to FREEZE camera look.
-            // Notify game/player manager if possible.
+            _targetRect.anchoredPosition = new Vector2(_targetRect.anchoredPosition.x, randomY);
+
+            // Reset Player Position to center
+            _playerRect.anchoredPosition = new Vector2(_playerRect.anchoredPosition.x, 0f);
+
+            Debug.Log($"Radio Mini-game Started. Target Y: {randomY} (Range: +/- {safeRangeY})");
         }
 
-        private void StopMiniGame()
+        // Called when 10s ends
+        private void FinishSession()
         {
-            if (!_isMinigameActive) return;
+            if (_isSessionFinished) return;
+            
+            _isSessionFinished = true;
+            // Record final state but DO NOT close canvas
+            ApplyRewards();
+            Debug.Log("Radio Session Finished. UI holding state.");
+        }
 
+        // Called when walking away
+        private void CloseMiniGameFully()
+        {
             _isMinigameActive = false;
-            Debug.Log("Radio Mini-game Stopped.");
-            Cursor.lockState = CursorLockMode.Locked; // Return to FPS lock
+            _isSessionFinished = false;
+            if (_minigameCanvas != null)
+                _minigameCanvas.SetActive(false);
         }
 
         private void HandleMiniGame()
         {
-            // 1. Target Movement (Simple Sine Wave + Noise for randomness)
-            _targetMoveTime += Time.deltaTime * _targetMoveSpeed;
-            _targetBarPos = Mathf.PerlinNoise(_targetMoveTime, 0f);
-            
-            // 2. Player Input (Space to lift)
+            float dt = Time.deltaTime;
+            _sessionTimer += dt;
+
+            // Check for End of Session
+            if (_sessionTimer >= _sessionDuration)
+            {
+                FinishSession();
+                return;
+            }
+
+            // 1. Player Physics (Gravity vs Jump)
             if (Input.GetKey(KeyCode.Space))
             {
-                _playerBarPos += _barLiftForce * Time.deltaTime;
+                _playerVelocityY += _liftForce * dt;
             }
             else
             {
-                _playerBarPos -= _barGravity * Time.deltaTime;
+                _playerVelocityY -= _gravity * dt;
             }
 
-            _playerBarPos = Mathf.Clamp01(_playerBarPos);
+            // Apply Velocity
+            Vector2 newPos = _playerRect.anchoredPosition;
+            newPos.y += _playerVelocityY * dt;
 
-            // 3. Check Overlap
-            float diff = Mathf.Abs(_playerBarPos - _targetBarPos);
-            bool isInside = diff < (_targetSize / 2f);
-
-            if (isInside)
-            {
-                float gainMultiplier = 1f;
-
-                if (MaskManager.Instance != null)
-                {
-                    // Mask: Risk Taker
-                    if (MaskManager.Instance.IsEffectActive(Data.MaskType.RiskTaker))
-                    {
-                        gainMultiplier *= 2f;
-                    }
-
-                    // Mask: Madness Perk
-                    if (MaskManager.Instance.IsEffectActive(Data.MaskType.MadnessPerk) && ResourceManager.Instance != null)
-                    {
-                        float sanity = ResourceManager.Instance.GetSanity();
-                        // Example: Lower sanity = higher multiplier. 
-                        // If Sanity 100 -> 1x. If Sanity 0 -> 2x.
-                        float madnessBonus = Mathf.Lerp(2f, 1f, sanity / 100f);
-                        gainMultiplier *= madnessBonus;
-                    }
-                }
-
-                // Gain Frequency
-                ResourceManager.Instance.ModifyFrequency(_frequencyGainSpeed * gainMultiplier * Time.deltaTime);
-            }
-
-            // Visual Updates (Pseudo-code for transform manipulation)
-            if (_playerBarVisual != null)
-                _playerBarVisual.localPosition = new Vector3(0, _playerBarPos, 0); // Example
+            // 2. Clamp Player to Background
+            // Assuming anchors are centered
+            float maxY = (_bgHeight * 0.5f) - (_playerHeight * 0.5f);
+            float minY = -(_bgHeight * 0.5f) + (_playerHeight * 0.5f);
             
-            if (_targetBarVisual != null)
-                _targetBarVisual.localPosition = new Vector3(0, _targetBarPos, 0); // Example
+            if (newPos.y > maxY)
+            {
+                newPos.y = maxY;
+                _playerVelocityY = 0f; 
+            }
+            else if (newPos.y < minY)
+            {
+                newPos.y = minY;
+                _playerVelocityY = 0f; 
+            }
+
+            _playerRect.anchoredPosition = newPos;
+
+            // 3. Check Overlap (Success Logic)
+            if (CheckOverlap())
+            {
+                _successTimer += dt;
+                // Optional: You could change color here if overlapped
+            }
+        }
+
+        private bool CheckOverlap()
+        {
+            float playerY = _playerRect.anchoredPosition.y;
+            float targetY = _targetRect.anchoredPosition.y; 
+            
+            // Check if Player is INSIDE Target
+            // Target is the container, Player is the content to hold inside.
+            // Target Top > Player Top AND Target Bottom < Player Bottom
+            
+            float targetTop = targetY + (_targetHeight * 0.5f);
+            float targetBottom = targetY - (_targetHeight * 0.5f);
+            float playerTop = playerY + (_playerHeight * 0.5f);
+            float playerBottom = playerY - (_playerHeight * 0.5f);
+
+            return (playerTop <= targetTop && playerBottom >= targetBottom);
+        }
+
+        private void ApplyRewards()
+        {
+            float successRatio = _successTimer / _sessionDuration;
+            float reward = _maxFrequencyReward * successRatio;
+
+            // Apply Mask Modifiers
+            if (MaskManager.Instance != null)
+            {
+                if (MaskManager.Instance.IsEffectActive(Data.MaskType.RiskTaker))
+                {
+                    reward *= 2f;
+                }
+                
+                if (MaskManager.Instance.IsEffectActive(Data.MaskType.MadnessPerk) && ResourceManager.Instance != null)
+                {
+                    float sanity = ResourceManager.Instance.GetSanity();
+                    float madnessBonus = Mathf.Lerp(2f, 1f, sanity / 100f);
+                    reward *= madnessBonus;
+                }
+            }
+
+            if (ResourceManager.Instance != null)
+            {
+                ResourceManager.Instance.ModifyFrequency(reward);
+                Debug.Log($"Radio Reward: {reward:F1}% Freq (Success: {successRatio:P0})");
+            }
         }
 
         private void ConsumeElectricityOverTime()
         {
-            if (ResourceManager.Instance != null && ResourceManager.Instance.GetElectricity() > 0)
+            if (ResourceManager.Instance != null)
             {
-                ResourceManager.Instance.ModifyElectricity(-_electricityConsumptionRate * Time.deltaTime);
-            }
-            else
-            {
-                // Out of power, stop game
-                StopMiniGame();
-                Debug.Log("Radio stopped: Out of Electricity!");
+                if (ResourceManager.Instance.GetElectricity() > 0)
+                {
+                    ResourceManager.Instance.ModifyElectricity(-_electricityConsumptionRate * Time.deltaTime);
+                }
+                else
+                {
+                    CloseMiniGameFully(); // Power cut aborts completely
+                }
             }
         }
     }
