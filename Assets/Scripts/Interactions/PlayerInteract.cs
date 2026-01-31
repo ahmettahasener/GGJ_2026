@@ -245,5 +245,52 @@ namespace GGJ_2026.Interactions
                 _playerMovement.SetControl(true);
             }
         }
+        public void LockAndMovePlayerTo(Transform playerTarget)
+        {
+            if (_cameraCoroutine != null)
+                StopCoroutine(_cameraCoroutine);
+
+            _isInteracting = true;
+
+            if (_playerMovement != null)
+                _playerMovement.SetControl(false);
+
+            _cameraCoroutine = StartCoroutine(MovePlayerTo(playerTarget));
+        }
+        private IEnumerator MovePlayerTo(Transform target)
+        {
+            Transform player = transform;
+
+            Vector3 startPos = player.position;
+            Quaternion startRot = player.rotation;
+
+            float time = 0f;
+
+            while (time < _transitionDuration)
+            {
+                time += Time.deltaTime;
+                float t = time / _transitionDuration;
+                float curveValue = _transitionCurve.Evaluate(t);
+
+                player.position = Vector3.Lerp(
+                    startPos,
+                    target.position,
+                    curveValue
+                );
+
+                player.rotation = Quaternion.Slerp(
+                    startRot,
+                    target.rotation,
+                    curveValue
+                );
+
+                yield return null;
+            }
+
+            // Hard set
+            player.position = target.position;
+            player.rotation = target.rotation;
+        }
+
     }
 }

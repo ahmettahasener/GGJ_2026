@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using GGJ_2026.UI;
+using System.Collections;
 
 namespace GGJ_2026.Managers
 {
@@ -23,6 +24,12 @@ namespace GGJ_2026.Managers
 
         public GameState CurrentState => _currentState;
 
+        [Header("Game Over Cinematic")]
+        [SerializeField] private Transform _gameOverPlayerPoint;
+        [SerializeField] private GameObject _monsterPrefab;
+        [SerializeField] private Transform _monsterSpawnPoint;
+        [SerializeField] private GameUI _gameUI;
+
         private void Awake()
         {
             if (Instance == null)
@@ -39,6 +46,13 @@ namespace GGJ_2026.Managers
         private void Start()
         {
             ChangeState(GameState.MaskSelection);
+        }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                ChangeState(GameState.GameOver);
+            }
         }
 
         public void ChangeState(GameState newState)
@@ -62,6 +76,7 @@ namespace GGJ_2026.Managers
                     Debug.Log("VICTORY! You contacted the outside world!");
                     break;
                 case GameState.GameOver:
+                    StartCoroutine(GameOverSequence());
                     Debug.Log("GAME OVER. The monster caught you.");
                     break;
             }
@@ -223,5 +238,44 @@ namespace GGJ_2026.Managers
             CurrentNight = 1;
             ChangeState(GameState.MaskSelection);
         }
+        private IEnumerator GameOverSequence()
+        {
+            Debug.Log("GAME OVER SEQUENCE STARTED");
+
+            var playerInteract = FindObjectOfType<Interactions.PlayerInteract>();
+
+            if (playerInteract != null && _gameOverPlayerPoint != null)
+            {
+                playerInteract.LockAndMovePlayerTo(_gameOverPlayerPoint);
+            }
+
+            // Sinematik nefes
+            yield return new WaitForSeconds(0.5f);
+
+            // Monster spawn
+            if (_monsterPrefab != null && _monsterSpawnPoint != null)
+            {
+                GameObject monster = Instantiate(
+                    _monsterPrefab,
+                    _monsterSpawnPoint.position,
+                    _monsterSpawnPoint.rotation
+                );
+
+                var controller = monster.GetComponent<MonsterGameOverController>();
+                if (controller != null)
+                {
+                    controller.StartMovingToPlayer(
+                        FindObjectOfType<GGJ_2026.Player.PlayerMovement>().transform,
+                        OnMonsterReachedPlayer
+                    );
+                }
+            }
+        }
+
+        private void OnMonsterReachedPlayer()
+        {
+            _gameUI.GameOver();
+        }
+
     }
 }

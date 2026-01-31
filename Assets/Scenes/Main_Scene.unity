@@ -127,6 +127,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
+      propertyPath: _gameUI
+      value: 
+      objectReference: {fileID: 514515330}
+    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
+      propertyPath: _monsterPrefab
+      value: 
+      objectReference: {fileID: 7844818705065591976, guid: 6469494ce6bf35441a220a3287d138f8, type: 3}
+    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
+      propertyPath: _monsterSpawnPoint
+      value: 
+      objectReference: {fileID: 156993373}
+    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
+      propertyPath: _gameOverCameraPoint
+      value: 
+      objectReference: {fileID: 1258954731}
+    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
+      propertyPath: _gameOverPlayerPoint
+      value: 
+      objectReference: {fileID: 1258954731}
     - target: {fileID: 964145288365661151, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -271,6 +291,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &156993372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 156993373}
+  m_Layer: 0
+  m_Name: Game Over Monster Spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &156993373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156993372}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 376.82, y: 59.34, z: 536.69}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!43 &240777672
 Mesh:
   m_ObjectHideFlags: 0
@@ -560,6 +611,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &514515330 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6238396507672289289, guid: 48321e4189cf0dd45b9bda6a728fc6e2, type: 3}
+  m_PrefabInstance: {fileID: 1656382235}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4935560be685d74fbdcd9dbc8853766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &553229799
 Mesh:
   m_ObjectHideFlags: 0
@@ -1607,6 +1669,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 800285394}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!1 &818583688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 818583689}
+  m_Layer: 0
+  m_Name: ===========GAME OVER==============
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &818583689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818583688}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 375.0165, y: 58.82577, z: 502.95795}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &832419649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2343,6 +2436,37 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1258954730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1258954731}
+  m_Layer: 0
+  m_Name: Game Over Game View
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1258954731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258954730}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 377.53, y: 59.64, z: 503.232}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1295307285
 Mesh:
   m_ObjectHideFlags: 0
@@ -14624,3 +14748,6 @@ SceneRoots:
   - {fileID: 1354227389}
   - {fileID: 432252006807924301}
   - {fileID: 800285394}
+  - {fileID: 818583689}
+  - {fileID: 156993373}
+  - {fileID: 1258954731}

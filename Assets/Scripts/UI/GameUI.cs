@@ -67,6 +67,10 @@ namespace GGJ_2026.UI
             }
         }
 
+        public void GameOver()
+        {
+            ShowGameOver();
+        }
         private void SetupButtons()
         {
             // Main Menu
@@ -92,9 +96,9 @@ namespace GGJ_2026.UI
         {
             switch (newState)
             {
-                case GameState.GameOver:
-                    ShowGameOver();
-                    break;
+                //case GameState.GameOver:
+                //    ShowGameOver();
+                //    break;
                 case GameState.GameWin:
                     ShowGameWin();
                     break;
