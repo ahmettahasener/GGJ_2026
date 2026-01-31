@@ -4505,6 +4505,42 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: lights.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3595462188343471602}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[1]'
+      value: 
+      objectReference: {fileID: 4448140367250180815}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[2]'
+      value: 
+      objectReference: {fileID: 4353618673227646143}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[3]'
+      value: 
+      objectReference: {fileID: 5243281788575748152}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[4]'
+      value: 
+      objectReference: {fileID: 6827782125466480397}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[5]'
+      value: 
+      objectReference: {fileID: 3027560693675013968}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[6]'
+      value: 
+      objectReference: {fileID: 7390350588995265484}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
+      propertyPath: 'lights.Array.data[7]'
+      value: 
+      objectReference: {fileID: 7390350588995265484}
+    - target: {fileID: 2683030746146688658, guid: 61cca1330ea5d6849a3b57cb54c01c6c, type: 3}
       propertyPath: 'lighths.Array.data[0]'
       value: 
       objectReference: {fileID: 3595462188343471602}

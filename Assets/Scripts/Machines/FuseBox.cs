@@ -19,7 +19,8 @@ namespace GGJ_2026.Machines
 
         private bool[] _switchStates; // true = ON (50), false = OFF (-50)
         private Coroutine _doorCoroutine;
-        
+
+        [SerializeField] private List<GameObject> lights;
         // Internal state
         private bool _isFocusing = false;
 
@@ -205,11 +206,13 @@ namespace GGJ_2026.Machines
             {
                 // Fuse Blown! Scramble switches.
                 ScrambleSwitches();
+                ToggleLights(false);
                 if (_statusRenderer != null) _statusRenderer.material = _matOff;
             }
             else
             {
-                 if (_statusRenderer != null) _statusRenderer.material = _matOn;
+                ToggleLights(true);
+                if (_statusRenderer != null) _statusRenderer.material = _matOn;
             }
         }
 
@@ -228,6 +231,14 @@ namespace GGJ_2026.Machines
                 int rnd = Random.Range(0, _switches.Count);
                 _switchStates[rnd] = false; // Force OFF
                 SetSwitchVisual(rnd, false);
+            }
+        }
+
+        private void ToggleLights(bool fuseState)
+        {
+            foreach (GameObject light in lights)
+            {
+                light.SetActive(fuseState);
             }
         }
 
