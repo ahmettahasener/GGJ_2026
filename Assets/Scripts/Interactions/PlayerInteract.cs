@@ -1,6 +1,7 @@
 using UnityEngine;
 using GGJ_2026.UI;
 using System.Collections;
+using GGJ_2026.Managers;
 
 namespace GGJ_2026.Interactions
 {
@@ -25,6 +26,7 @@ namespace GGJ_2026.Interactions
         private Quaternion _originalLocalRot;
         private Coroutine _cameraCoroutine;
 
+        private MaskManager maskManager;
         private void Awake()
         {
             _cam = Camera.main;
@@ -34,6 +36,16 @@ namespace GGJ_2026.Interactions
             }
 
             _playerMovement = GetComponent<GGJ_2026.Player.PlayerMovement>();
+
+            maskManager = FindAnyObjectByType<MaskManager>();
+        }
+        private void OnEnable()
+        {
+            maskManager.cardSelectedEvent += ExitInteraction;
+        }
+        private void OnDisable()
+        {
+            maskManager.cardSelectedEvent -= ExitInteraction;
         }
 
         private void Update()
@@ -291,6 +303,13 @@ namespace GGJ_2026.Interactions
             player.position = target.position;
             player.rotation = target.rotation;
         }
-
+        public void FreePlayer()
+        {
+            // Re-enable controls AFTER camera is back
+            if (_playerMovement != null)
+            {
+                _playerMovement.SetControl(true);
+            }
+        }
     }
 }

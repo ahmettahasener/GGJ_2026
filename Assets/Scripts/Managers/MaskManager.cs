@@ -1,4 +1,5 @@
 using GGJ_2026.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace GGJ_2026.Managers
 
         private Coroutine _clearRoutine;
 
+        public Action cardSelectedEvent;
 
         private void Awake()
         {
@@ -75,6 +77,7 @@ namespace GGJ_2026.Managers
             {
                 GameManager.Instance.ChangeState(GameState.Gameplay);
             }
+            cardSelectedEvent?.Invoke();
         }
 
         private void ApplyMaskEffects(MaskData mask)
