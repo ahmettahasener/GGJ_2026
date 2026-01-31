@@ -123,6 +123,14 @@ namespace GGJ_2026.Machines
             // Record final state but DO NOT close canvas
             ApplyRewards();
             Debug.Log("Radio Session Finished. UI holding state.");
+            
+            StartCoroutine(WaitAndExit(2.0f));
+        }
+
+        private System.Collections.IEnumerator WaitAndExit(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            ForceExit();
         }
 
         // Called when walking away
@@ -145,6 +153,9 @@ namespace GGJ_2026.Machines
                 FinishSession();
                 return;
             }
+
+            // Block input if finished (extra safety though Update loop checks _isSessionFinished)
+            if (_isSessionFinished) return;
 
             // 1. Player Physics (Gravity vs Jump)
             if (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Space))

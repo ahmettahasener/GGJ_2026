@@ -14,8 +14,11 @@ namespace GGJ_2026.Machines
         // For now, could be a localized particle or just a debug/event.
         [SerializeField] private ParticleSystem _visualEffect;
 
+        private bool _isProcessing = false;
+
         protected override void UseMachine()
         {
+            if (_isProcessing) return;
             if (ResourceManager.Instance == null) return;
 
             // 1. Check Power
@@ -32,18 +35,37 @@ namespace GGJ_2026.Machines
                 actualCost *= ResourceManager.Instance.MedicineCostMultiplier;
             }
 
-            // 2. Check Cost & Consume
+            // 2. Check Cost
             if (ResourceManager.Instance.GetElectricity() >= actualCost)
             {
-                ResourceManager.Instance.ModifyElectricity(-actualCost);
-                
-                // 3. Apply Effect
-                ApplyMedicineEffect();
+                // Start Processing
+                StartCoroutine(ProcessMedicine(actualCost));
             }
             else
             {
                 Debug.Log("Medicine Machine: Not enough electricity.");
             }
+        }
+
+        private System.Collections.IEnumerator ProcessMedicine(float cost)
+        {
+            _isProcessing = true;
+            Debug.Log("Dispensing Medicine... (3s)");
+            
+            // Consume immediately or after? Usually interact = consume.
+            if (ResourceManager.Instance != null)
+                ResourceManager.Instance.ModifyElectricity(-cost);
+
+            // Wait 3 seconds
+            yield return new WaitForSeconds(3.0f);
+
+            // Apply Effect
+            ApplyMedicineEffect();
+
+            _isProcessing = false;
+
+            // Auto Exit
+            ForceExit();
         }
 
         private void ApplyMedicineEffect()

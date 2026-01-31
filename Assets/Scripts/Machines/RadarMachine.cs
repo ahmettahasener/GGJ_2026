@@ -100,14 +100,24 @@ namespace GGJ_2026.Machines
 
             // Close canvas after a brief delay to show final position
             Invoke(nameof(CloseMiniGameFully), 0.5f);
+
+            StartCoroutine(WaitAndExit(2.0f));
         }
 
         private void CloseMiniGameFully()
         {
             _isMinigameActive = false;
             _isSessionFinished = false;
+
             //if (_minigameCanvas != null)
             //    _minigameCanvas.SetActive(false);
+        }
+
+
+        private System.Collections.IEnumerator WaitAndExit(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            ForceExit();
         }
 
         private void HandleMiniGame()

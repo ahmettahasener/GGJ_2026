@@ -181,7 +181,7 @@ namespace GGJ_2026.Managers
             }
 
             // 8. Auto-Release Player from Bed (Force Exit Interaction)
-            var playerInteract = FindObjectOfType<Interactions.PlayerInteract>();
+            var playerInteract = FindFirstObjectByType<Interactions.PlayerInteract>();
             if (playerInteract != null)
             {
                 playerInteract.ForceExitInteraction();
@@ -242,7 +242,7 @@ namespace GGJ_2026.Managers
         {
             Debug.Log("GAME OVER SEQUENCE STARTED");
 
-            var playerInteract = FindObjectOfType<Interactions.PlayerInteract>();
+            var playerInteract = FindFirstObjectByType<Interactions.PlayerInteract>();
 
             if (playerInteract != null && _gameOverPlayerPoint != null)
             {

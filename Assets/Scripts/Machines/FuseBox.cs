@@ -168,15 +168,25 @@ namespace GGJ_2026.Machines
 
             if (allOn)
             {
+                // Ensure we only trigger this ONCE per outage
                 if (ResourceManager.Instance != null && !ResourceManager.Instance.IsPowerOn)
                 {
                     Debug.Log("FuseBox Fixed! Restoring Power.");
-                    // Restore to 100% current, but next night cap is 70%
+                    // Restore logic
                     ResourceManager.Instance.RestorePower(ResourceManager.Instance.GetElectricity(), 70f);
                     
                     if (_statusRenderer != null) _statusRenderer.material = _matOn;
+
+                    // Auto Exit delay
+                    StartCoroutine(WaitAndExit(1.5f));
                 }
             }
+        }
+
+        private IEnumerator WaitAndExit(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            ForceExit();
         }
 
         // Called by ResourceManager via Event or direct reference?

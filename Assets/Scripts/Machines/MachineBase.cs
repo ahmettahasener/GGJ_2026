@@ -63,5 +63,14 @@ namespace GGJ_2026.Machines
                 }
             }
         }
+        protected void ForceExit()
+        {
+            // Find PlayerInteract - efficient enough for occasional calling
+            PlayerInteract playerInteract = FindFirstObjectByType<PlayerInteract>();
+            if (playerInteract != null)
+            {
+                playerInteract.ForceExitInteraction();
+            }
+        }
     }
 }
