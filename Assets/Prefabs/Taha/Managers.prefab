@@ -51,6 +51,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentState: 0
+  _gameOverPlayerPoint: {fileID: 0}
+  _monsterPrefab: {fileID: 7844818705065591976, guid: 6469494ce6bf35441a220a3287d138f8, type: 3}
+  _monsterSpawnPoint: {fileID: 0}
+  _gameUI: {fileID: 0}
 --- !u!114 &6412002245782668018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,23 +251,30 @@ MonoBehaviour:
   - spawnTransform: {fileID: 0}
     type: 0
     endPoint: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 5c27d20115e62234dbcbcb7ef02694ad, type: 3}
   - spawnTransform: {fileID: 0}
     type: 1
     endPoint: {fileID: 0}
+    sprite: {fileID: 21300000, guid: ec210ab0ddaa51940a27d18e6ca7c130, type: 3}
   - spawnTransform: {fileID: 0}
     type: 1
     endPoint: {fileID: 0}
+    sprite: {fileID: 21300000, guid: ec210ab0ddaa51940a27d18e6ca7c130, type: 3}
   - spawnTransform: {fileID: 0}
     type: 2
     endPoint: {fileID: 0}
+    sprite: {fileID: 21300000, guid: ec210ab0ddaa51940a27d18e6ca7c130, type: 3}
   - spawnTransform: {fileID: 0}
     type: 0
     endPoint: {fileID: 0}
+    sprite: {fileID: 21300000, guid: ec210ab0ddaa51940a27d18e6ca7c130, type: 3}
   - spawnTransform: {fileID: 0}
     type: 0
     endPoint: {fileID: 0}
-  _moveSpeed: 9
-  _disappearDelay: 0.5
+    sprite: {fileID: 21300000, guid: 5c27d20115e62234dbcbcb7ef02694ad, type: 3}
+  _moveSpeed: 7
+  _disappearDelay: 0.8
+  _staticDelay: 0.2
   _approachSpeed: 40
   _approachStopDistance: 2
   _detectionDistance: 50

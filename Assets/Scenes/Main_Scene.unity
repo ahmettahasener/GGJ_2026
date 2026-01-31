@@ -132,17 +132,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 514515330}
     - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
-      propertyPath: _monsterPrefab
-      value: 
-      objectReference: {fileID: 7844818705065591976, guid: 6469494ce6bf35441a220a3287d138f8, type: 3}
-    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: _monsterSpawnPoint
       value: 
       objectReference: {fileID: 156993373}
-    - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
-      propertyPath: _gameOverCameraPoint
-      value: 
-      objectReference: {fileID: 1258954731}
     - target: {fileID: 391254144833476090, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: _gameOverPlayerPoint
       value: 

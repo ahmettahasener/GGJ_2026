@@ -12,6 +12,7 @@ namespace GGJ_2026.Managers
             public JumpscareType type;
             [Tooltip("Only for MovingDisappear type - target position to move to")]
             public Transform endPoint; // For MovingDisappear type
+            public Sprite sprite;
         }
 
         public enum JumpscareType
@@ -28,6 +29,7 @@ namespace GGJ_2026.Managers
         [Header("Behavior Settings")]
         [SerializeField] private float _moveSpeed = 5f; // For MovingDisappear type
         [SerializeField] private float _disappearDelay = 0.5f; // For StaticDisappear type
+        [SerializeField] private float _staticDelay = 0.5f; // For StaticDisappear type
         [SerializeField] private float _approachSpeed = 8f; // For ApproachingDisappear type
         [SerializeField] private float _approachStopDistance = 1.5f; // How close before disappearing
 
@@ -43,9 +45,11 @@ namespace GGJ_2026.Managers
         private Camera _playerCamera;
         private Coroutine _jumpscareCoroutine;
         private Transform _currentEndPoint; // Store endpoint for current jumpscare
+        private SpriteRenderer _monsterSprRenderer;
 
         private void Awake()
         {
+            _monsterSprRenderer = _jumpscarePrefab.GetComponentInChildren<SpriteRenderer>();
             // Find player
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
@@ -112,14 +116,17 @@ namespace GGJ_2026.Managers
                     {
                         Debug.LogWarning("MovingDisappear type requires an EndPoint! Using default movement.");
                     }
+                    _monsterSprRenderer.sprite = spawnPoint.sprite;
                     _jumpscareCoroutine = StartCoroutine(MovingDisappearBehavior());
                     Debug.LogWarning("JUMPSCARE TYPE 1: Moving Disappear");
                     break;
                 case JumpscareType.StaticDisappear:
+                    _monsterSprRenderer.sprite = spawnPoint.sprite;
                     _jumpscareCoroutine = StartCoroutine(StaticDisappearBehavior());
                     Debug.LogWarning("JUMPSCARE TYPE 2: Static Disappear");
                     break;
                 case JumpscareType.ApproachingDisappear:
+                    _monsterSprRenderer.sprite = spawnPoint.sprite;
                     _jumpscareCoroutine = StartCoroutine(ApproachingDisappearBehavior());
                     Debug.LogWarning("JUMPSCARE TYPE 3: Approaching Disappear");
                     break;
@@ -256,7 +263,7 @@ namespace GGJ_2026.Managers
             if (SoundManager.Instance != null)
                 SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Soft");
 
-            yield return new WaitForSeconds(_disappearDelay);
+            yield return new WaitForSeconds(_staticDelay);
 
             CleanupJumpscare();
         }
