@@ -30,6 +30,8 @@ namespace GGJ_2026.Managers
         [SerializeField] private Transform _monsterSpawnPoint;
         [SerializeField] private GameUI _gameUI;
 
+        [SerializeField] private AudioSource _audioSource;
+
         private void Awake()
         {
             if (Instance == null)
@@ -229,6 +231,11 @@ namespace GGJ_2026.Managers
         {
             if (MaskManager.Instance != null)
                 MaskManager.Instance.ClearMask();
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, "NewNight");
+            }
 
             CurrentNight++;
             ChangeState(GameState.MaskSelection);
