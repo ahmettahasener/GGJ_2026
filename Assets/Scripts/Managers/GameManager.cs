@@ -7,7 +7,9 @@ namespace GGJ_2026.Managers
     {
         MaskSelection,
         Gameplay,
-        EndNight
+        EndNight,
+        GameWin,
+        GameOver
     }
 
     public class GameManager : MonoBehaviour
@@ -53,21 +55,25 @@ namespace GGJ_2026.Managers
                     HandleGameplay();
                     break;
                 case GameState.EndNight:
-                    HandleEndNight();
+                    StartCoroutine(EndNightSequence());
+                    break;
+                case GameState.GameWin:
+                    Debug.Log("VICTORY! You contacted the outside world!");
+                    break;
+                case GameState.GameOver:
+                    Debug.Log("GAME OVER. The monster caught you.");
                     break;
             }
         }
 
         private void HandleMaskSelection()
         {
-            // In a real scenario, this would enable the UI for selection.
-            // For now, let's simulate selecting a random mask to proceed if we don't have the UI yet.
             Debug.Log("Mask Selection Phase Started.");
             
-            // Example flow: 
-            // 1. Get Options from MaskManager
-            // 2. Show UI
-            // 3. User clicks -> Calls ConfirmSelection(mask)
+            if (MaskManager.Instance != null)
+            {
+                MaskManager.Instance.StartSelectionPhase();
+            }
         }
 
         // Called by UI
@@ -81,14 +87,10 @@ namespace GGJ_2026.Managers
 
         private void HandleGameplay()
         {
-            // Enable controls, start timers
             Debug.Log("Night Started! Good luck.");
             
-            // Refill resources if needed (Day Start Logic could be here or separate)
-            if (ResourceManager.Instance != null)
-            {
-                ResourceManager.Instance.RefillEnergyForNight();
-            }
+            // Note: Electricity Refill happens at the END of the previous night (or start of day logic)
+            // But for the very first night, we assume values are set in Inspector.
         }
 
         public void EndNight()
@@ -96,46 +98,84 @@ namespace GGJ_2026.Managers
             ChangeState(GameState.EndNight);
         }
 
-        private void HandleEndNight()
+        private System.Collections.IEnumerator EndNightSequence()
         {
-            Debug.Log("Night Ended. Calculating stats...");
+            Debug.Log("Night Ending... Fading out (imagined).");
+            
+            // Simulate Fade Out time
+            yield return new WaitForSeconds(2.0f);
 
-            if (ResourceManager.Instance != null && MaskManager.Instance != null)
+            CalculateNightResults();
+            
+            // Check Win / Loss
+            if (CheckGameOver())
             {
-                // 1. Sanity Drop (Base 10 + Random)
-                float sanityDrop = 10f + UnityEngine.Random.Range(0f, 10f);
-                ResourceManager.Instance.ModifySanity(-sanityDrop);
-                Debug.Log($"Sanity Dropped by {sanityDrop}");
-
-                // 2. Monster Approach
-                float monsterMove = 100f + UnityEngine.Random.Range(0f, 50f);
-                
-                // Risk Taker Effect
-                if (MaskManager.Instance.IsEffectActive(Data.MaskType.RiskTaker))
-                {
-                    monsterMove *= 1.5f;
-                    Debug.Log("RiskTaker active: Monster moves faster!");
-                }
-                
-                // Observer Effect
-                if (MaskManager.Instance.IsEffectActive(Data.MaskType.Observer))
-                {
-                    monsterMove *= 0.5f;
-                    Debug.Log("Observer active: Monster feels watched, moves slower.");
-                }
-
-                ResourceManager.Instance.ModifyDistance(-monsterMove);
-                Debug.Log($"Monster moved {monsterMove}m closer.");
+                ChangeState(GameState.GameOver);
+                yield break;
+            }
+            
+            if (CheckGameWin())
+            {
+                ChangeState(GameState.GameWin);
+                yield break;
             }
 
-            // Prepare for next night
-            Invoke(nameof(StartNewNight), 3f);
+            yield return new WaitForSeconds(1.0f); // Breathing room
+            StartNewNight();
+        }
+
+        private void CalculateNightResults()
+        {
+            if (ResourceManager.Instance != null)
+            {
+                // 1. Sanity Drop (Base 10 + Random 0-10)
+                float sanityDrop = 10f + UnityEngine.Random.Range(0f, 10f);
+                ResourceManager.Instance.ModifySanity(-sanityDrop);
+                Debug.Log($"Sanity Dropped by {sanityDrop:F1}");
+
+                // 2. Monster Approach (Base 100 + Random 0-50) * Multiplier
+                float baseMove = 100f + UnityEngine.Random.Range(0f, 50f);
+                float finalMove = baseMove * ResourceManager.Instance.MonsterAdvanceMultiplier;
+                
+                ResourceManager.Instance.ModifyDistance(-finalMove);
+                Debug.Log($"Monster moved {finalMove:F1}m closer (Base: {baseMove:F1}, Mult: {ResourceManager.Instance.MonsterAdvanceMultiplier}).");
+
+                // 3. Refill Electricity for Next Night
+                // If power is out, we might want to punish? But prompt says standard logic:
+                // "Restore to NextNightMaxElectricity (set by fuse repair or default)"
+                ResourceManager.Instance.RefillEnergyForNight(); 
+                Debug.Log("Electricity Refilled for next night.");
+            }
+        }
+
+        private bool CheckGameOver()
+        {
+            if (ResourceManager.Instance != null)
+            {
+                // Condition: Distance <= 0
+                if (ResourceManager.Instance.GetDistance() <= 0) return true;
+                
+                // Optional: Sanity <= 0?
+                if (ResourceManager.Instance.GetSanity() <= 0) 
+                {
+                    Debug.Log("Sanity reached 0! (Game Over condition potentially)");
+                    // return true; // Unleash if desired
+                }
+            }
+            return false;
+        }
+
+        private bool CheckGameWin()
+        {
+            if (ResourceManager.Instance != null)
+            {
+                if (ResourceManager.Instance.GetFrequency() >= 100f) return true;
+            }
+            return false;
         }
 
         private void StartNewNight()
         {
-            // Reset Mask? The design says "Mask effects apply for that night". 
-            // Usually we clear it before selection.
             if (MaskManager.Instance != null)
                 MaskManager.Instance.ClearMask();
 

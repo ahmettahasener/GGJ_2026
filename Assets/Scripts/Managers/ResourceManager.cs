@@ -104,14 +104,45 @@ namespace GGJ_2026.Managers
             OnPowerStateChanged?.Invoke(IsPowerOn);
         }
 
+        // Modifiers (Reset every night)
+        public float MonsterAdvanceMultiplier { get; private set; } = 1f;
+        public float RadioFrequencyMultiplier { get; private set; } = 1f;
+        public float RadarPushMultiplier { get; private set; } = 1f;
+        public float RadarCostMultiplier { get; private set; } = 1f;
+        public float RadarFuseChanceMultiplier { get; private set; } = 1f;
+        public float MedicineCostMultiplier { get; private set; } = 1f;
+        public bool IsFuseBlockActive { get; private set; } = false;
+
+        public void ResetModifiers()
+        {
+            MonsterAdvanceMultiplier = 1f;
+            RadioFrequencyMultiplier = 1f;
+            RadarPushMultiplier = 1f;
+            RadarCostMultiplier = 1f;
+            RadarFuseChanceMultiplier = 1f;
+            MedicineCostMultiplier = 1f;
+            IsFuseBlockActive = false;
+            
+            Debug.Log("ResourceManager: Modifiers Reset.");
+        }
+
+        // --- Setter Methods for MaskManager ---
+        public void SetMonsterAdvanceMultiplier(float val) => MonsterAdvanceMultiplier = val;
+        public void SetRadioFrequencyMultiplier(float val) => RadioFrequencyMultiplier = val;
+        public void SetRadarPushMultiplier(float val) => RadarPushMultiplier = val;
+        public void SetRadarCostMultiplier(float val) => RadarCostMultiplier = val;
+        public void SetRadarFuseChanceMultiplier(float val) => RadarFuseChanceMultiplier = val;
+        public void SetMedicineCostMultiplier(float val) => MedicineCostMultiplier = val;
+        public void SetFuseBlockActive(bool val) => IsFuseBlockActive = val;
+
         public void TriggerPowerOutage()
         {
             if (!IsPowerOn) return;
 
-            // Check Mask: Durable Line
-            if (MaskManager.Instance != null && MaskManager.Instance.IsEffectActive(Data.MaskType.DurableLine))
+            // Check Modifier: Fuse Block (Durable Line)
+            if (IsFuseBlockActive)
             {
-                Debug.Log("Fuse would have blown, but Durable Line prevented it!");
+                Debug.Log("Fuse would have blown, but Block is Active (Durable Line)!");
                 return;
             }
 

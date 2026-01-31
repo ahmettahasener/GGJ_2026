@@ -31,13 +31,7 @@ namespace GGJ_2026.Machines
             if (ResourceManager.Instance == null) return;
             if (!ResourceManager.Instance.IsPowerOn) return;
 
-            float actualCost = _electricityCost;
-
-            // Mask: Efficient Radar
-            if (MaskManager.Instance != null && MaskManager.Instance.IsEffectActive(Data.MaskType.EfficientRadar))
-            {
-                actualCost *= 0.2f; // Very low cost
-            }
+            float actualCost = _electricityCost * ResourceManager.Instance.RadarCostMultiplier;
 
             if (ResourceManager.Instance.GetElectricity() >= actualCost)
             {
@@ -55,19 +49,10 @@ namespace GGJ_2026.Machines
             float pushAmount = _distancePushAmount;
             float currentFuseChance = _fuseBlowChance;
 
-            if (MaskManager.Instance != null)
+            if (ResourceManager.Instance != null)
             {
-                // Mask: Strong Pusher
-                if (MaskManager.Instance.IsEffectActive(Data.MaskType.StrongPusher))
-                {
-                    pushAmount *= 1.5f;
-                }
-
-                // Mask: Efficient Radar (No fuse blow)
-                if (MaskManager.Instance.IsEffectActive(Data.MaskType.EfficientRadar))
-                {
-                    currentFuseChance = 0f;
-                }
+                pushAmount *= ResourceManager.Instance.RadarPushMultiplier;
+                currentFuseChance *= ResourceManager.Instance.RadarFuseChanceMultiplier;
             }
 
             // 1. Push Distance

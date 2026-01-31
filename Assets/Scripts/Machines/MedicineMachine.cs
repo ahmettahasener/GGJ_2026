@@ -27,10 +27,9 @@ namespace GGJ_2026.Machines
 
             float actualCost = _electricityCost;
             
-            // Mask: Free Medicine
-            if (MaskManager.Instance != null && MaskManager.Instance.IsEffectActive(Data.MaskType.FreeMedicine))
+            if (ResourceManager.Instance != null)
             {
-                actualCost = 0f;
+                actualCost *= ResourceManager.Instance.MedicineCostMultiplier;
             }
 
             // 2. Check Cost & Consume

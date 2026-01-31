@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f37bb503d6d94595b9f1730ffeb66, type: 3}
   m_Name: DurableLine
   m_EditorClassIdentifier: 
-  _maskName: 
+  _maskName: Durable Line
   _description: 
   _icon: {fileID: 0}
   _maskType: 5

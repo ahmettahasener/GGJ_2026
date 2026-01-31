@@ -208,21 +208,25 @@ namespace GGJ_2026.Machines
             float successRatio = _successTimer / _sessionDuration;
             float reward = _maxFrequencyReward * successRatio;
 
-            // Apply Mask Modifiers
-            if (MaskManager.Instance != null)
+            float finalMultiplier = 1f;
+
+            if (ResourceManager.Instance != null)
             {
-                if (MaskManager.Instance.IsEffectActive(Data.MaskType.RiskTaker))
-                {
-                    reward *= 2f;
-                }
-                
-                if (MaskManager.Instance.IsEffectActive(Data.MaskType.MadnessPerk) && ResourceManager.Instance != null)
+                // Base Multiplier (includes Risk Taker)
+                finalMultiplier *= ResourceManager.Instance.RadioFrequencyMultiplier;
+
+                // Dynamic Check: Madness Perk
+                // We still check MaskManager for the type because this is a dynamic stat-based effect
+                if (MaskManager.Instance != null && MaskManager.Instance.IsEffectActive(Data.MaskType.MadnessPerk))
                 {
                     float sanity = ResourceManager.Instance.GetSanity();
+                    // If Sanity 100 -> 1x. If Sanity 0 -> 2x.
                     float madnessBonus = Mathf.Lerp(2f, 1f, sanity / 100f);
-                    reward *= madnessBonus;
+                    finalMultiplier *= madnessBonus;
                 }
             }
+
+            reward *= finalMultiplier;
 
             if (ResourceManager.Instance != null)
             {
