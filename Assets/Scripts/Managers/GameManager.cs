@@ -218,5 +218,10 @@ namespace GGJ_2026.Managers
             CurrentNight++;
             ChangeState(GameState.MaskSelection);
         }
+        public void ResetGame()
+        {
+            CurrentNight = 1;
+            ChangeState(GameState.MaskSelection);
+        }
     }
 }
