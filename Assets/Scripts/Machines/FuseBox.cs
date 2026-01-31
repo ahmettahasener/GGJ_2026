@@ -10,6 +10,7 @@ namespace GGJ_2026.Machines
         [SerializeField] private float _repairDuration = 2.0f;
         [SerializeField] private Color _normalColor = Color.green;
         [SerializeField] private Color _brokenColor = Color.red;
+        [SerializeField] private GameObject[] lighths;
         
         // This machine doesn't cost electricity to use.
         private void Awake()
@@ -38,6 +39,7 @@ namespace GGJ_2026.Machines
         {
             // Visual feedback
             GetComponent<Renderer>().material.color = isPowerOn ? _normalColor : _brokenColor;
+            ChangeActivity(isPowerOn);
         }
 
         public override void OnInteract()
@@ -68,6 +70,14 @@ namespace GGJ_2026.Machines
 
             Debug.Log("Fuse Box Repaired!");
             ResourceManager.Instance.RestorePower(10f, 70f); // 10% Current, 70% Max Next Night
+        }
+
+        private void ChangeActivity(bool isPowerOn)
+        {
+            foreach (GameObject obj in lighths)
+            {
+                obj.SetActive(isPowerOn);
+            }
         }
     }
 }
