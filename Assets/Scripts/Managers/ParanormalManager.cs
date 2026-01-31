@@ -8,16 +8,32 @@ namespace GGJ_2026.Managers
         [Header("Settings")]
         [SerializeField] private float _minEventInterval = 10f;
         [SerializeField] private float _maxEventInterval = 60f;
-        [SerializeField] private float _sanityThreshold = 70f; // Starts happening below this
+        [SerializeField] private float _sanityThreshold = 70f;
 
         [Header("Event Types")]
-        [SerializeField] private Light[] _roomLights; // Assign in inspector
+        [SerializeField] private Light[] _roomLights;
 
         [Header("Jumpscare System")]
-        [SerializeField] private JumpscareManager _jumpscareManager; // Assign in inspector
+        [SerializeField] private JumpscareManager _jumpscareManager;
+
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource; // Paranormal olaylar için tek AudioSource
 
         private float _timer;
         private float _currentInterval;
+
+        private void Awake()
+        {
+            // Auto-find AudioSource if not assigned
+            if (_audioSource == null)
+            {
+                _audioSource = GetComponent<AudioSource>();
+                if (_audioSource == null)
+                {
+                    _audioSource = gameObject.AddComponent<AudioSource>();
+                }
+            }
+        }
 
         private void Start()
         {
@@ -31,7 +47,6 @@ namespace GGJ_2026.Managers
 
             float currentSanity = ResourceManager.Instance.GetSanity();
 
-            // Only run if sanity is low enough
             if (currentSanity > _sanityThreshold) return;
 
             _timer += Time.deltaTime;
@@ -46,26 +61,18 @@ namespace GGJ_2026.Managers
         private void SetNextInterval()
         {
             _timer = 0f;
-
-            // Interval gets shorter as sanity drops
-            // Lerps between max and min based on Sanity (0 to 70)
             float sanity = ResourceManager.Instance != null ? ResourceManager.Instance.GetSanity() : 100f;
             float t = 1f - Mathf.Clamp01(sanity / 100f);
-            // t=0 (High Sanity) -> Max Interval
-            // t=1 (Low Sanity) -> Min Interval
-
             _currentInterval = Mathf.Lerp(_maxEventInterval, _minEventInterval, t);
         }
 
         private void TriggerEvent(float sanity)
         {
-            // Pick a random event type
-            int roll = Random.Range(0, 4); // Now includes jumpscare (case 3)
+            int roll = Random.Range(0, 4);
 
-            // Higher chance for intense events if sanity is very low
             if (sanity < 30f)
             {
-                roll = Random.Range(0, 5); // Increased range for more intense events
+                roll = Random.Range(0, 5);
             }
 
             Debug.Log($"Paranormal Event Triggered! (Roll: {roll}, Sanity: {sanity:F1})");
@@ -73,43 +80,39 @@ namespace GGJ_2026.Managers
             switch (roll)
             {
                 case 0:
-                    // Sound: Whispers or Creaks
+                    // Whispers - Kendi AudioSource'unu kullan
                     if (SoundManager.Instance != null)
                     {
-                        SoundManager.Instance.PlayRandomSoundFromGroup("Ambience_Creepy");
+                        SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, "Ambience_Creepy");
                     }
                     break;
 
                 case 1:
-                    // Sound: Sudden Bang or Knock
+                    // Bang/Knock - Kendi AudioSource'unu kullan
                     if (SoundManager.Instance != null)
                     {
-                        SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Soft");
+                        SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, "Jumpscare_Soft");
                     }
                     break;
 
                 case 2:
-                    // Visual: Lights Flicker
+                    // Lights Flicker
                     StartCoroutine(FlickerLights());
                     break;
 
                 case 3:
-                    // NEW: Jumpscare Events (Moving, Static, or Approaching)
+                    // Jumpscare
                     if (_jumpscareManager != null)
                     {
                         _jumpscareManager.TriggerRandomJumpscare();
                     }
-                    else
-                    {
-                        Debug.LogWarning("JumpscareManager not assigned!");
-                    }
                     break;
 
                 case 4:
-                    // Intense: Loud noise + Light kill (only when sanity < 30)
+                    // Intense - Kendi AudioSource'unu kullan
                     if (SoundManager.Instance != null)
                     {
-                        SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Loud");
+                        SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, "Jumpscare_Loud");
                     }
                     StartCoroutine(FlickerLights(true));
                     break;
@@ -132,7 +135,6 @@ namespace GGJ_2026.Managers
                 for (int i = 0; i < flickers; i++)
                 {
                     light.enabled = !light.enabled;
-                    // Randomize intensity slightly
                     if (light.enabled)
                     {
                         light.intensity = originalIntensity * Random.Range(0.5f, 1.5f);

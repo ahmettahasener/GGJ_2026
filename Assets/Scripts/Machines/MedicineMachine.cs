@@ -75,10 +75,10 @@ namespace GGJ_2026.Machines
             Debug.Log($"Medicine Used: Sanity increased by {_sanityRestoreAmount}");
 
             // Audio
-            if (SoundManager.Instance != null && _dispenseSound != null)
-            {
-                SoundManager.Instance.PlaySound(_dispenseSound);
-            }
+            //if (SoundManager.Instance != null && _dispenseSound != null)
+            //{
+            //    SoundManager.Instance.PlaySound(_dispenseSound);
+            //}
 
             // Visual
             if (_visualEffect != null)

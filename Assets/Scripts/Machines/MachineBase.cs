@@ -14,9 +14,25 @@ namespace GGJ_2026.Machines
         [Tooltip("The position/rotation where the camera should move to during interaction.")]
         [SerializeField] protected Transform _interactionViewPoint;
 
+        [Header("Audio")]
+        [SerializeField] protected AudioSource _audioSource;
+
         public string InteractionPrompt => $"Press \"E\" to use {_machineName}";
         public Transform InteractionViewPoint => _interactionViewPoint;
         public bool UseCameraFocus => _useCameraFocus;
+
+        private void Awake()
+        {
+            // Auto-find AudioSource if not assigned
+            if (_audioSource == null)
+            {
+                _audioSource = GetComponent<AudioSource>();
+                if (_audioSource == null)
+                {
+                    _audioSource = gameObject.AddComponent<AudioSource>();
+                }
+            }
+        }
 
         public virtual void OnInteract()
         {
@@ -61,6 +77,21 @@ namespace GGJ_2026.Machines
                 {
                     Debug.Log("Not enough electricity!");
                 }
+            }
+        }
+        protected void PlayMachineSound(AudioClip clip, float volume = 1f)
+        {
+            if (_audioSource != null && clip != null)
+            {
+                _audioSource.PlayOneShot(clip, volume);
+            }
+        }
+
+        protected void PlayMachineSoundFromGroup(string groupName, float volume = 1f)
+        {
+            if (SoundManager.Instance != null && _audioSource != null)
+            {
+                SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, groupName, volume);
             }
         }
         protected void ForceExit()

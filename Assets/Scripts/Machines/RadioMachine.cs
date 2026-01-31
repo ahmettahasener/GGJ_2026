@@ -21,6 +21,10 @@ namespace GGJ_2026.Machines
         [SerializeField] private RectTransform _targetRect;
         [SerializeField] private RectTransform _playerRect;
 
+        [Header("Audio")]
+        [SerializeField] private AudioClip _startSound;
+        [SerializeField] private AudioClip _successSound;
+
         // Mini-game State
         private bool _isMinigameActive = false;
         private bool _isSessionFinished = false; // New state to freeze UI but keep it open
@@ -112,6 +116,8 @@ namespace GGJ_2026.Machines
             //_playerRect.anchoredPosition = new Vector2(_playerRect.anchoredPosition.x, 0f);
 
             Debug.Log($"Radio Mini-game Started. Target Y: {randomY} (Range: +/- {safeRangeY})");
+
+            PlayMachineSound(_startSound);
         }
 
         // Called when 10s ends
@@ -243,6 +249,10 @@ namespace GGJ_2026.Machines
             {
                 ResourceManager.Instance.ModifyFrequency(reward);
                 Debug.Log($"Radio Reward: {reward:F1}% Freq (Success: {successRatio:P0})");
+            }
+            if (_successTimer > _sessionDuration * 0.5f) // %50+ başarı
+            {
+                PlayMachineSound(_successSound);
             }
         }
 

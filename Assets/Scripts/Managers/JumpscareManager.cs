@@ -38,6 +38,8 @@ namespace GGJ_2026.Managers
         [SerializeField] private float _detectionAngle = 45f; // Cone angle for detection
         [SerializeField] private LayerMask _jumpscareLayer; // Layer for jumpscare objects
 
+        [SerializeField] private AudioSource _jumpscareAudioS;
+
         private GameObject _currentJumpscare;
         private bool _isJumpscareActive = false;
         private JumpscareType _currentType;
@@ -103,7 +105,7 @@ namespace GGJ_2026.Managers
             // Play spawn sound
             if (SoundManager.Instance != null)
             {
-                SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Spawn");
+                SoundManager.Instance.PlayRandomSoundFromGroup(_jumpscareAudioS,"Jumpscare_Monster");
             }
 
             // Start the appropriate coroutine based on type
@@ -203,7 +205,7 @@ namespace GGJ_2026.Managers
                 yield return null;
 
             if (SoundManager.Instance != null)
-                SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Soft");
+                SoundManager.Instance.PlayRandomSoundFromGroup(_jumpscareAudioS, "Jumpscare_Monster");
 
             // If endpoint is provided, move to it
             if (_currentEndPoint != null)
@@ -261,7 +263,7 @@ namespace GGJ_2026.Managers
                 yield return null;
 
             if (SoundManager.Instance != null)
-                SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Soft");
+                SoundManager.Instance.PlayRandomSoundFromGroup(_jumpscareAudioS, "Jumpscare_Monster");
 
             yield return new WaitForSeconds(_staticDelay);
 
@@ -274,7 +276,7 @@ namespace GGJ_2026.Managers
                 yield return null;
 
             if (SoundManager.Instance != null)
-                SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Loud");
+                SoundManager.Instance.PlayRandomSoundFromGroup(_jumpscareAudioS, "Jumpscare_Monster");
 
             // Move towards player while KEEPING ORIGINAL ROTATION
             while (_currentJumpscare != null && _playerTransform != null)
@@ -288,7 +290,7 @@ namespace GGJ_2026.Managers
                 {
                     // Play final jumpscare sound
                     if (SoundManager.Instance != null)
-                        SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Loud");
+                        SoundManager.Instance.PlayRandomSoundFromGroup(_jumpscareAudioS, "Jumpscare_Monster");
 
                     break;
                 }
