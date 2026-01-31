@@ -12,7 +12,10 @@ namespace GGJ_2026.Managers
 
         [Header("Event Types")]
         [SerializeField] private Light[] _roomLights; // Assign in inspector
-        
+
+        [Header("Jumpscare System")]
+        [SerializeField] private JumpscareManager _jumpscareManager; // Assign in inspector
+
         private float _timer;
         private float _currentInterval;
 
@@ -43,46 +46,73 @@ namespace GGJ_2026.Managers
         private void SetNextInterval()
         {
             _timer = 0f;
-            
+
             // Interval gets shorter as sanity drops
             // Lerps between max and min based on Sanity (0 to 70)
             float sanity = ResourceManager.Instance != null ? ResourceManager.Instance.GetSanity() : 100f;
-            float t = 1f - Mathf.Clamp01(sanity / 100f); 
+            float t = 1f - Mathf.Clamp01(sanity / 100f);
             // t=0 (High Sanity) -> Max Interval
             // t=1 (Low Sanity) -> Min Interval
-            
+
             _currentInterval = Mathf.Lerp(_maxEventInterval, _minEventInterval, t);
         }
 
         private void TriggerEvent(float sanity)
         {
             // Pick a random event type
-            int roll = Random.Range(0, 3);
-            
-            // Higher chance for intense events if sanity is very low
-            if (sanity < 30f) roll = Random.Range(0, 4); 
+            int roll = Random.Range(0, 4); // Now includes jumpscare (case 3)
 
-            Debug.Log($"Paranormal Event Triggered! (Roll: {roll})");
+            // Higher chance for intense events if sanity is very low
+            if (sanity < 30f)
+            {
+                roll = Random.Range(0, 5); // Increased range for more intense events
+            }
+
+            Debug.Log($"Paranormal Event Triggered! (Roll: {roll}, Sanity: {sanity:F1})");
 
             switch (roll)
             {
                 case 0:
                     // Sound: Whispers or Creaks
-                    SoundManager.Instance.PlayRandomSoundFromGroup("Ambience_Creepy");
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlayRandomSoundFromGroup("Ambience_Creepy");
+                    }
                     break;
+
                 case 1:
                     // Sound: Sudden Bang or Knock
-                    SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Soft");
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Soft");
+                    }
                     break;
+
                 case 2:
                     // Visual: Lights Flicker
                     StartCoroutine(FlickerLights());
                     break;
+
                 case 3:
-                     // Intense: Loud noise + Light kill
-                     SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Loud");
-                     StartCoroutine(FlickerLights(true));
-                     break;
+                    // NEW: Jumpscare Events (Moving, Static, or Approaching)
+                    if (_jumpscareManager != null)
+                    {
+                        _jumpscareManager.TriggerRandomJumpscare();
+                    }
+                    else
+                    {
+                        Debug.LogWarning("JumpscareManager not assigned!");
+                    }
+                    break;
+
+                case 4:
+                    // Intense: Loud noise + Light kill (only when sanity < 30)
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlayRandomSoundFromGroup("Jumpscare_Loud");
+                    }
+                    StartCoroutine(FlickerLights(true));
+                    break;
             }
         }
 
@@ -95,13 +125,21 @@ namespace GGJ_2026.Managers
 
             foreach (var light in _roomLights)
             {
+                if (light == null) continue;
+
                 float originalIntensity = light.intensity;
+
                 for (int i = 0; i < flickers; i++)
                 {
                     light.enabled = !light.enabled;
-                    // Randomize intensity slightly?
+                    // Randomize intensity slightly
+                    if (light.enabled)
+                    {
+                        light.intensity = originalIntensity * Random.Range(0.5f, 1.5f);
+                    }
                     yield return new WaitForSeconds(Random.Range(0.05f, duration));
                 }
+
                 light.enabled = true;
                 light.intensity = originalIntensity;
             }

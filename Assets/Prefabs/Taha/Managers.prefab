@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8819626355252454237}
   - component: {fileID: 3521499870555766491}
   - component: {fileID: 3127710463092106786}
+  - component: {fileID: 6304068244126964282}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -228,3 +229,45 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _jumpscareManager: {fileID: 6304068244126964282}
+--- !u!114 &6304068244126964282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2207176782497900549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c29421c417a774c8d7b2c24e6b6ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _jumpscarePrefab: {fileID: 7844818705065591976, guid: 6469494ce6bf35441a220a3287d138f8, type: 3}
+  _spawnPoints:
+  - spawnTransform: {fileID: 0}
+    type: 0
+    endPoint: {fileID: 0}
+  - spawnTransform: {fileID: 0}
+    type: 1
+    endPoint: {fileID: 0}
+  - spawnTransform: {fileID: 0}
+    type: 1
+    endPoint: {fileID: 0}
+  - spawnTransform: {fileID: 0}
+    type: 2
+    endPoint: {fileID: 0}
+  - spawnTransform: {fileID: 0}
+    type: 0
+    endPoint: {fileID: 0}
+  - spawnTransform: {fileID: 0}
+    type: 0
+    endPoint: {fileID: 0}
+  _moveSpeed: 9
+  _disappearDelay: 0.5
+  _approachSpeed: 40
+  _approachStopDistance: 2
+  _detectionDistance: 50
+  _detectionAngle: 45
+  _jumpscareLayer:
+    serializedVersion: 2
+    m_Bits: 128
