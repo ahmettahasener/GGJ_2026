@@ -13,7 +13,8 @@ namespace GGJ_2026.Machines
         [SerializeField] private bool _isOpen = false; // Baþlangýç durumu
         [SerializeField] private bool canOpenable = true;
 
-        [SerializeField] AudioClip door;
+        [SerializeField] AudioClip doorOpen;
+        [SerializeField] AudioClip doorLock;
         public bool GetCanOpen
         {
             get
@@ -51,20 +52,6 @@ namespace GGJ_2026.Machines
             _closedRotation = _doorPivot.localRotation;
             _openRotation = _closedRotation * Quaternion.Euler(0f, _openAngle, 0f);
         }
-        private void OnEnable()
-        {
-            GameManager.Instance.gameOverEvent += ForceOpen;
-            GameManager.Instance.gameWinEvent += ForceOpen;
-            GameManager.Instance.newNightEvent += ForceClose;
-            _fuseBox.fuseExpEvent += ForceOpen;
-        }
-        private void OnDisable()
-        {
-            GameManager.Instance.gameOverEvent -= ForceOpen;
-            GameManager.Instance.gameWinEvent -= ForceOpen;
-            GameManager.Instance.newNightEvent -= ForceClose;
-            _fuseBox.fuseExpEvent -= ForceOpen;
-        }
 
         private void Start()
         {
@@ -77,6 +64,8 @@ namespace GGJ_2026.Machines
 
         public override void OnInteract()
         {
+            if (!canOpenable && doorLock != null) PlayMachineSound(doorLock);
+
             if (_isAnimating || !canOpenable) return; // Animasyon sýrasýnda etkileþim engelle
 
             if (_isOpen)
@@ -91,7 +80,7 @@ namespace GGJ_2026.Machines
 
         private IEnumerator OpenDoor()
         {
-            _audioSource.PlayOneShot(door);
+            _audioSource.PlayOneShot(doorOpen);
 
             _isAnimating = true;
             Debug.Log("Kapý açýlýyor...");
@@ -118,7 +107,7 @@ namespace GGJ_2026.Machines
 
         private IEnumerator CloseDoor()
         {
-            _audioSource.PlayOneShot(door);
+            _audioSource.PlayOneShot(doorOpen);
 
             _isAnimating = true;
             Debug.Log("Kapý kapanýyor...");
@@ -179,6 +168,9 @@ namespace GGJ_2026.Machines
         }
         public void ForceClose()
         {
+            if (!_isOpen) return;
+
+            Debug.LogWarning("ForceClose");
             StartCoroutine(CloseDoor());
         }
     }

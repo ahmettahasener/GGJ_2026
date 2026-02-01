@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using GGJ_2026.UI;
 using System.Collections;
+using GGJ_2026.Machines;
 
 namespace GGJ_2026.Managers
 {
@@ -33,9 +34,11 @@ namespace GGJ_2026.Managers
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioSource _finalAudioSource;
 
-        public Action gameOverEvent;
-        public Action gameWinEvent;
-        public Action newNightEvent;
+        public bool gameOver;
+        public bool gameWin;
+        public bool newNight;
+
+        [SerializeField] Door door;
 
         private void Awake()
         {
@@ -80,7 +83,8 @@ namespace GGJ_2026.Managers
                     StartCoroutine(EndNightSequence());
                     break;
                 case GameState.GameWin:
-                    gameWinEvent?.Invoke();
+                    gameWin = true;
+                    door.ForceOpen();
                     if (SoundManager.Instance != null)
                     {
                         SoundManager.Instance.PlayRandomSoundFromGroup(_finalAudioSource, "GameWin");
@@ -88,7 +92,8 @@ namespace GGJ_2026.Managers
                     Debug.Log("VICTORY! You contacted the outside world!");
                     break;
                 case GameState.GameOver:
-                    gameOverEvent?.Invoke();
+                    gameOver = true;
+                    door.ForceOpen();
                     StartCoroutine(GameOverSequence());
                     Debug.Log("GAME OVER. The monster caught you.");
                     break;
@@ -112,6 +117,7 @@ namespace GGJ_2026.Managers
             {
                 MaskManager.Instance.StartSelectionPhase();
             }
+            newNight = false;
         }
 
         // Called by MaskManager
@@ -175,6 +181,8 @@ namespace GGJ_2026.Managers
             
             if (CheckGameWin())
             {
+                gameWin = true;
+                door.ForceOpen();
                 ChangeState(GameState.GameWin);
                 yield break; 
             }
@@ -248,7 +256,8 @@ namespace GGJ_2026.Managers
                 SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, "NewNight");
             }
 
-            newNightEvent?.Invoke();
+            newNight = true;
+            door.ForceClose();
 
             CurrentNight++;
             ChangeState(GameState.MaskSelection);
@@ -260,6 +269,8 @@ namespace GGJ_2026.Managers
         }
         private IEnumerator GameOverSequence()
         {
+            gameOver = true;
+
             Debug.Log("GAME OVER SEQUENCE STARTED");
 
             var playerInteract = FindFirstObjectByType<Interactions.PlayerInteract>();
