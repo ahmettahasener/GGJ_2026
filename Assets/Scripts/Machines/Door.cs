@@ -12,6 +12,8 @@ namespace GGJ_2026.Machines
         [SerializeField] private float _openDuration = 1.0f; // Açýlma süresi
         [SerializeField] private bool _isOpen = false; // Baþlangýç durumu
         [SerializeField] private bool canOpenable = true;
+
+        [SerializeField] AudioClip door;
         public bool GetCanOpen
         {
             get
@@ -71,6 +73,8 @@ namespace GGJ_2026.Machines
 
         private IEnumerator OpenDoor()
         {
+            _audioSource.PlayOneShot(door);
+
             _isAnimating = true;
             Debug.Log("Kapý açýlýyor...");
 
@@ -96,6 +100,8 @@ namespace GGJ_2026.Machines
 
         private IEnumerator CloseDoor()
         {
+            _audioSource.PlayOneShot(door);
+
             _isAnimating = true;
             Debug.Log("Kapý kapanýyor...");
 
@@ -133,7 +139,6 @@ namespace GGJ_2026.Machines
         public void Close()
         {
             if (_isAnimating || !_isOpen || !canOpenable) return;
-
             StartCoroutine(CloseDoor());
         }
         /// <summary>

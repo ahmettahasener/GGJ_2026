@@ -31,6 +31,7 @@ namespace GGJ_2026.Managers
         [SerializeField] private GameUI _gameUI;
 
         [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioSource _finalAudioSource;
 
         private void Awake()
         {
@@ -256,8 +257,12 @@ namespace GGJ_2026.Managers
                 playerInteract.LockAndMovePlayerTo(_gameOverPlayerPoint);
             }
 
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayRandomSoundFromGroup(_finalAudioSource, "FinalKoridor");
+            }
             // Sinematik nefes
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(6f);
 
             // Monster spawn
             if (_monsterPrefab != null && _monsterSpawnPoint != null)

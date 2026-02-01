@@ -17,6 +17,9 @@ namespace GGJ_2026.Machines
         [SerializeField] private Material _matOn;
         [SerializeField] private Material _matOff;
 
+        [SerializeField] AudioClip fuseExplosion;
+        [SerializeField] AudioClip fuseFix;
+
         private bool[] _switchStates; // true = ON (50), false = OFF (-50)
         private Coroutine _doorCoroutine;
 
@@ -217,11 +220,17 @@ namespace GGJ_2026.Machines
                 // Fuse Blown! Scramble switches.
                 ScrambleSwitches();
                 ToggleLights(false);
+
+                PlayMachineSound(fuseExplosion);
+
                 if (_statusRenderer != null) _statusRenderer.material = _matOff;
             }
             else
             {
                 ToggleLights(true);
+
+                PlayMachineSound(fuseFix);
+
                 if (_statusRenderer != null) _statusRenderer.material = _matOn;
             }
         }

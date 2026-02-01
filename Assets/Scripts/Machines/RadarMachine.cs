@@ -21,6 +21,8 @@ namespace GGJ_2026.Machines
         [SerializeField] private RectTransform _cursorRect; // Moving cursor sprite
         [SerializeField] private RectTransform _centerPoint; // Center reference (can be same as dartBackground)
 
+        [SerializeField] AudioClip radarButton;
+
         // Mini-game State
         private bool _isMinigameActive = false;
         private bool _isSessionFinished = false;
@@ -94,6 +96,8 @@ namespace GGJ_2026.Machines
         private void FinishSession(float accuracy)
         {
             if (_isSessionFinished) return;
+
+            PlayMachineSound(radarButton);
 
             _isSessionFinished = true;
             ApplyRadarEffect(accuracy);
