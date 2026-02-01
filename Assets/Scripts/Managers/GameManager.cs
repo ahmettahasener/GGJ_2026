@@ -33,6 +33,10 @@ namespace GGJ_2026.Managers
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioSource _finalAudioSource;
 
+        public Action gameOverEvent;
+        public Action gameWinEvent;
+        public Action newNightEvent;
+
         private void Awake()
         {
             if (Instance == null)
@@ -76,9 +80,15 @@ namespace GGJ_2026.Managers
                     StartCoroutine(EndNightSequence());
                     break;
                 case GameState.GameWin:
+                    gameWinEvent?.Invoke();
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlayRandomSoundFromGroup(_finalAudioSource, "GameWin");
+                    }
                     Debug.Log("VICTORY! You contacted the outside world!");
                     break;
                 case GameState.GameOver:
+                    gameOverEvent?.Invoke();
                     StartCoroutine(GameOverSequence());
                     Debug.Log("GAME OVER. The monster caught you.");
                     break;
@@ -237,6 +247,8 @@ namespace GGJ_2026.Managers
             {
                 SoundManager.Instance.PlayRandomSoundFromGroup(_audioSource, "NewNight");
             }
+
+            newNightEvent?.Invoke();
 
             CurrentNight++;
             ChangeState(GameState.MaskSelection);

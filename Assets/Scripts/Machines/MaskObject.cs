@@ -14,9 +14,17 @@ namespace GGJ_2026.Machines
         [SerializeField] private Transform _viewPoint;
         [SerializeField] private SpriteRenderer _iconRenderer;
 
+        [SerializeField] AudioClip selectMask; //
+
+        private AudioSource _audioSource;
         public string InteractionPrompt => $"Press E to choose: {_maskData?.MaskName}";
         public Transform InteractionViewPoint => _viewPoint;
         public bool UseCameraFocus => false; // Masks don't lock camera
+
+        private void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
 
         public void Initialize(MaskData data)
         {
@@ -32,7 +40,12 @@ namespace GGJ_2026.Machines
             if (_maskData == null) return;
 
             Debug.Log($"Picked Mask: {_maskData.MaskName}");
-            
+
+            if (_audioSource != null && selectMask != null)
+            {
+                _audioSource.PlayOneShot(selectMask);
+            }
+
             // Confirm selection via Manager
             if (MaskManager.Instance != null)
             {

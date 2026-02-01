@@ -306,7 +306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 821339789125084604, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: _soundGroups.Array.data[9].GroupName
-      value: FinalKoridor
+      value: GameWin
       objectReference: {fileID: 0}
     - target: {fileID: 821339789125084604, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: _soundGroups.Array.data[3].Clips.Array.size
@@ -334,7 +334,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 821339789125084604, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: _soundGroups.Array.data[9].Clips.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 821339789125084604, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: '_soundGroups.Array.data[3].Clips.Array.data[0]'
@@ -11510,6 +11510,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Global Volume
       objectReference: {fileID: 0}
+    - target: {fileID: 4649804485048627802, guid: 51012ef4f8ebc70429182cc557242c2c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8055986162016114055, guid: 51012ef4f8ebc70429182cc557242c2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.890823
@@ -12103,6 +12107,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9223274624957708968, guid: c0f4c6b21958daa48ae7f4ced7459953, type: 3}
+      propertyPath: _audioSource
+      value: 
+      objectReference: {fileID: 1419448946}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19992,6 +20000,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1611191118539338924, guid: f8dfa5af6e1104d4390fef24de5d0511, type: 3}
+      propertyPath: _useCameraFocus
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2097987009078646748, guid: f8dfa5af6e1104d4390fef24de5d0511, type: 3}
       propertyPath: m_LocalPosition.x
       value: 375.58

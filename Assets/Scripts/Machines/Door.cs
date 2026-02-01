@@ -33,8 +33,12 @@ namespace GGJ_2026.Machines
         private Quaternion _closedRotation;
         private Quaternion _openRotation;
 
+        private FuseBox _fuseBox;
+
         private void Awake()
         {
+            _fuseBox = FindAnyObjectByType<FuseBox>();
+
             _electricityCost = 0f; // Kapý elektrik tüketmez
 
             // Pivot ayarý
@@ -46,6 +50,20 @@ namespace GGJ_2026.Machines
             // Baþlangýç rotasyonlarýný kaydet
             _closedRotation = _doorPivot.localRotation;
             _openRotation = _closedRotation * Quaternion.Euler(0f, _openAngle, 0f);
+        }
+        private void OnEnable()
+        {
+            GameManager.Instance.gameOverEvent += ForceOpen;
+            GameManager.Instance.gameWinEvent += ForceOpen;
+            GameManager.Instance.newNightEvent += ForceClose;
+            _fuseBox.fuseExpEvent += ForceOpen;
+        }
+        private void OnDisable()
+        {
+            GameManager.Instance.gameOverEvent -= ForceOpen;
+            GameManager.Instance.gameWinEvent -= ForceOpen;
+            GameManager.Instance.newNightEvent -= ForceClose;
+            _fuseBox.fuseExpEvent -= ForceOpen;
         }
 
         private void Start()
@@ -154,5 +172,14 @@ namespace GGJ_2026.Machines
                 Open();
         }
 
+        public void ForceOpen()
+        {
+            Debug.LogWarning("ForceOpen");
+            StartCoroutine(OpenDoor());
+        }
+        public void ForceClose()
+        {
+            StartCoroutine(CloseDoor());
+        }
     }
 }

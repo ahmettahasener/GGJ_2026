@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using GGJ_2026.Managers;
+using System;
 
 namespace GGJ_2026.Machines
 {
@@ -28,6 +29,8 @@ namespace GGJ_2026.Machines
         private bool _isFocusing = false;
 
         private Collider _collider;
+
+        public Action fuseExpEvent;
 
         private void Start()
         {
@@ -221,6 +224,8 @@ namespace GGJ_2026.Machines
                 ScrambleSwitches();
                 ToggleLights(false);
 
+                fuseExpEvent?.Invoke();
+
                 PlayMachineSound(fuseExplosion);
 
                 if (_statusRenderer != null) _statusRenderer.material = _matOff;
@@ -240,14 +245,14 @@ namespace GGJ_2026.Machines
             // User: "rastgele belirlenen birkaçı (örn: 3-5 adet) 'Kapalı' konuma geçmeli."
             if (_switchStates == null) return;
 
-            int countToFail = Random.Range(3, 6); // 3, 4, or 5
+            int countToFail = UnityEngine.Random.Range(3, 6); // 3, 4, or 5
             
             // Allow duplicates for simplicity (some might stay on/off), or ensure unique?
             // Let's ensure at least some turn off.
             
             for (int i = 0; i < countToFail; i++)
             {
-                int rnd = Random.Range(0, _switches.Count);
+                int rnd = UnityEngine.Random.Range(0, _switches.Count);
                 _switchStates[rnd] = false; // Force OFF
                 SetSwitchVisual(rnd, false);
             }
