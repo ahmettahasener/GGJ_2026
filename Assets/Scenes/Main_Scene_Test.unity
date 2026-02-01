@@ -1812,6 +1812,70 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2561445628384038892, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561445628384038892, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561445628384038892, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561445628384038892, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3974091008269652791, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3974091008269652791, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3974091008269652791, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3974091008269652791, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5729047522527877666, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5729047522527877666, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5729047522527877666, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5729047522527877666, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6212932643205594432, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6212932643205594432, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6212932643205594432, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6212932643205594432, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6899463025950166630, guid: ce6a68a49f2b87e4eaf4626a7bf9869a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 370.309
@@ -13362,6 +13426,14 @@ PrefabInstance:
     - target: {fileID: 8274889752605272992, guid: 5535053749d5ed24c9577d226fafe465, type: 3}
       propertyPath: m_Name
       value: TelsizDesk
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863417516347906094, guid: 5535053749d5ed24c9577d226fafe465, type: 3}
+      propertyPath: _targetMoveAmount
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863417516347906094, guid: 5535053749d5ed24c9577d226fafe465, type: 3}
+      propertyPath: _targetBarMoveSpeed
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

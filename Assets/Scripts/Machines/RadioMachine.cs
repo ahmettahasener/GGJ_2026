@@ -15,6 +15,12 @@ namespace GGJ_2026.Machines
         [SerializeField] private float _liftForce = 1200f;
         [SerializeField] private float _targetPadding = 10f; // Extra padding inside background
 
+        [Header("Target Movement Settings")]
+        [SerializeField] private float _targetBarMoveSpeed = 0.1f; // Ne kadar hızlı hareket edecek?
+        [SerializeField] private float _targetMoveAmount = 1.3f; // Ne kadar geniş bir alanda salınacak?
+        [SerializeField] private float _targetBarTargetPosition = 0; // Ne kadar geniş bir alanda salınacak?
+        private float _initialTargetY; // Başlangıçtaki rastgele Y pozisyonu
+
         [Header("UI References")]
         [SerializeField] private GameObject _minigameCanvas; 
         [SerializeField] private RectTransform _backgroundRect;
@@ -96,26 +102,13 @@ namespace GGJ_2026.Machines
             _targetHeight = _targetRect.rect.height;
             _playerHeight = _playerRect.rect.height;
 
-            // 1. Randomize Target Position (Strict Bounds)
-            // Available vertical space for the CENTER of the target
-            // Total Height - Target Height gives the range of motion for the edges.
-            // Halve it for center offset from (0,0).
-            float safeRangeY = (_bgHeight - _targetHeight) * 0.5f;
-            
-            // Subtract padding to be extra safe
-            safeRangeY -= _targetPadding;
 
-            if (safeRangeY < 0) safeRangeY = 0; // Prevent negative range if target > bg
-
-            // Randomize between -Range and +Range (Assuming Center Pivot)
-            float randomY = Random.Range(-safeRangeY, safeRangeY);
-            
-            _targetRect.anchoredPosition = new Vector2(_targetRect.anchoredPosition.x, randomY);
-
+            //_targetRect.anchoredPosition = new Vector2(_targetRect.anchoredPosition.x, 0);
+            _targetBarTargetPosition = SetRandomPosition();
             //// Reset Player Position to center
             //_playerRect.anchoredPosition = new Vector2(_playerRect.anchoredPosition.x, 0f);
 
-            Debug.Log($"Radio Mini-game Started. Target Y: {randomY} (Range: +/- {safeRangeY})");
+            //Debug.Log($"Radio Mini-game Started. Target Y: {randomY} (Range: +/- {safeRangeY})");
 
             PlayMachineSound(_startSound);
         }
@@ -163,6 +156,26 @@ namespace GGJ_2026.Machines
             // Block input if finished (extra safety though Update loop checks _isSessionFinished)
             if (_isSessionFinished) return;
 
+            // --- 1. TARGET HAREKET MANTIĞI (DÜZELTİLMİŞ) ---
+            Vector2 currentPos = _targetRect.anchoredPosition;
+
+            // MoveTowards otomatik olarak hedefe doğru (hız * zaman) kadar ilerler.
+            // Artı/eksi yönünü kendi ayarlar.
+            float newY = Mathf.MoveTowards(currentPos.y, _targetBarTargetPosition, _targetBarMoveSpeed * dt);
+
+            _targetRect.anchoredPosition = new Vector2(currentPos.x, newY);
+
+            // Hedefe vardık mı? Çok yakınsak yeni hedef seç (Epsilon hatasını önlemek için 0.01f)
+            if (Mathf.Abs(newY - _targetBarTargetPosition) < 0.01f)
+            {
+                _targetBarTargetPosition = SetRandomPosition();
+                Debug.Log("Yeni Hedef Belirlendi: " + _targetBarTargetPosition);
+            }
+
+            //_targetRect.anchoredPosition = new Vector2(_targetRect.anchoredPosition.x, 1.3f);
+            Debug.Log("anchored " + _targetRect.anchoredPosition.y);
+            Debug.Log("local " + _targetRect.localPosition.y);
+
             // 1. Player Physics (Gravity vs Jump)
             if (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Space))
             {
@@ -201,6 +214,13 @@ namespace GGJ_2026.Machines
                 _successTimer += dt;
                 // Optional: You could change color here if overlapped
             }
+        }
+
+        private float SetRandomPosition()
+        {
+            float randomValue = Random.Range(-1.3f, 1.3f);
+            Debug.Log("Random target bar value = " + randomValue);
+            return randomValue;
         }
 
         private bool CheckOverlap()
