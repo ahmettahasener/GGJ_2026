@@ -1631,7 +1631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _machineName: RadioMachine
-  _electricityCost: 10
+  _electricityCost: 30
   _useCameraFocus: 1
   _interactionViewPoint: {fileID: 3287988076481707539}
   _audioSource: {fileID: 0}
@@ -1641,8 +1641,9 @@ MonoBehaviour:
   _gravity: 10
   _liftForce: 15
   _targetPadding: 10
-  _targetMoveSpeed: 0.1
-  _targetMoveAmount: 1.2
+  _targetBarMoveSpeed: 0.3
+  _targetMoveAmount: 1.3
+  _targetBarTargetPosition: 0
   _minigameCanvas: {fileID: 1950608684965956702}
   _backgroundRect: {fileID: 3181531052427837090}
   _targetRect: {fileID: 469538955589172636}

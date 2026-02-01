@@ -652,8 +652,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _machineName: Radar Machine
-  _electricityCost: 10
+  _electricityCost: 30
+  _useCameraFocus: 1
   _interactionViewPoint: {fileID: 1021556584852788296}
+  _audioSource: {fileID: 0}
   _baseDistancePushAmount: 50
   _fuseBlowChance: 0.2
   _electricityConsumptionRate: 2
@@ -664,6 +666,7 @@ MonoBehaviour:
   _dartBackground: {fileID: 832613015321467719}
   _cursorRect: {fileID: 5983749481838163397}
   _centerPoint: {fileID: 2426096992451947947}
+  radarButton: {fileID: 0}
 --- !u!1 &3413523925672130959
 GameObject:
   m_ObjectHideFlags: 0

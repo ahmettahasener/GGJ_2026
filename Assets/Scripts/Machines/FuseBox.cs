@@ -63,11 +63,11 @@ namespace GGJ_2026.Machines
             }
         }
 
-        protected override void ConsumeElectricity()
-        {
-            // FuseBox typically doesn't consume, it Just Exists.
-            // Or maybe it consumes a tiny bit? Base implementation applies if cost > 0.
-        }
+        //protected override void ConsumeElectricity()
+        //{
+        //    // FuseBox typically doesn't consume, it Just Exists.
+        //    // Or maybe it consumes a tiny bit? Base implementation applies if cost > 0.
+        //}
 
         protected override void UseMachine()
         {

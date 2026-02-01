@@ -694,7 +694,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5790489927360618836}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 385.21265, y: 58.67785, z: 504.39053}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -709,7 +709,7 @@ Transform:
   - {fileID: 407105119003162940}
   - {fileID: 8015307774865481920}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!65 &1497229328401690089
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -744,8 +744,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _machineName: Machine
-  _electricityCost: 10
+  _electricityCost: 20
+  _useCameraFocus: 1
   _interactionViewPoint: {fileID: 8015307774865481920}
+  _audioSource: {fileID: 0}
   _sanityRestoreAmount: 20
   _dispenseSound: {fileID: 0}
   _visualEffect: {fileID: 0}

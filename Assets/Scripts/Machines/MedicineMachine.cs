@@ -35,15 +35,15 @@ namespace GGJ_2026.Machines
                 actualCost *= ResourceManager.Instance.MedicineCostMultiplier;
             }
 
-            // 2. Check Cost
-            if (ResourceManager.Instance.GetElectricity() >= actualCost)
+            // 2. Check Cost & Consume
+            if (TryConsumeElectricity())
             {
                 // Start Processing
                 StartCoroutine(ProcessMedicine(actualCost));
             }
             else
             {
-                Debug.Log("Medicine Machine: Not enough electricity.");
+                // TryConsumeElectricity handles logging and UI
             }
         }
 
@@ -52,10 +52,8 @@ namespace GGJ_2026.Machines
             _isProcessing = true;
             Debug.Log("Dispensing Medicine... (3s)");
             
-            // Consume immediately or after? Usually interact = consume.
-            if (ResourceManager.Instance != null)
-                ResourceManager.Instance.ModifyElectricity(-cost);
-
+            // Cost already consumed via TryConsumeElectricity
+            
             // Wait 3 seconds
             yield return new WaitForSeconds(3.0f);
 

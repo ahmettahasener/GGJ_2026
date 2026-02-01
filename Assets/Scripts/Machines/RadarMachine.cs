@@ -1,5 +1,6 @@
 using UnityEngine;
 using GGJ_2026.Managers;
+using GGJ_2026.UI;
 
 namespace GGJ_2026.Machines
 {
@@ -44,19 +45,31 @@ namespace GGJ_2026.Machines
             if (_isMinigameActive && !_isSessionFinished)
             {
                 HandleMiniGame();
-                ConsumeElectricityOverTime();
             }
         }
 
         public override void OnInteract()
         {
             base.OnInteract();
+            
+            // 1. One-Time Consumption
+            if (!TryConsumeElectricity()) return;
 
-            // Check Power First
-            if (ResourceManager.Instance != null && !ResourceManager.Instance.IsPowerOn)
+            // 2. Immediate Fuse Check (Risk)
+            float currentFuseChance = _fuseBlowChance;
+            if (ResourceManager.Instance != null) 
+                 currentFuseChance *= ResourceManager.Instance.RadarFuseChanceMultiplier;
+
+            if (UnityEngine.Random.value < currentFuseChance)
             {
-                Debug.Log("Radar clicked: Power is OUT!");
-                return;
+                Debug.Log("Radar blew the fuse immediately!");
+                if (ResourceManager.Instance != null) 
+                    ResourceManager.Instance.TriggerPowerOutage();
+                
+                // Show feedback?
+                if (OverlayUI.Instance != null) OverlayUI.Instance.ShowPrompt("FUSE BLOWN!");
+                
+                return; // Stop interaction
             }
 
             if (!_isMinigameActive)

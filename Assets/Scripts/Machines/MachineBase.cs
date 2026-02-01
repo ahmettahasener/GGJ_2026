@@ -1,6 +1,7 @@
 using UnityEngine;
 using GGJ_2026.Interactions;
-using GGJ_2026.Managers; // Assuming access to managers might be needed later
+using GGJ_2026.Managers;
+using GGJ_2026.UI; // Assuming access to managers might be needed later
 
 namespace GGJ_2026.Machines
 {
@@ -54,30 +55,35 @@ namespace GGJ_2026.Machines
         protected virtual void UseMachine()
         {
             // Core logic for machine usage
-            ConsumeElectricity();
+            TryConsumeElectricity();
         }
 
-        protected virtual void ConsumeElectricity()
+        protected virtual bool TryConsumeElectricity()
         {
             if (ResourceManager.Instance != null)
             {
                 if (!ResourceManager.Instance.IsPowerOn)
                 {
                     Debug.Log("No Power! Machine won't work.");
-                    return;
+                    if (OverlayUI.Instance != null) OverlayUI.Instance.ShowPrompt("No Power!");
+                    return false;
                 }
 
-                // Simple check before consumption
+                // Check Cost
                 if (ResourceManager.Instance.GetElectricity() >= _electricityCost)
                 {
                     ResourceManager.Instance.ModifyElectricity(-_electricityCost);
                     Debug.Log($"{_machineName} consumed {_electricityCost} electricity.");
+                    return true;
                 }
                 else
                 {
                     Debug.Log("Not enough electricity!");
+                    if (OverlayUI.Instance != null) OverlayUI.Instance.ShowPrompt("Not Enough Power!");
+                    return false;
                 }
             }
+            return false;
         }
         protected void PlayMachineSound(AudioClip clip, float volume = 1f)
         {

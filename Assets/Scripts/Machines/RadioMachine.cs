@@ -56,7 +56,6 @@ namespace GGJ_2026.Machines
             if (_isMinigameActive && !_isSessionFinished)
             {
                 HandleMiniGame();
-                ConsumeElectricityOverTime();
             }
         }
 
@@ -64,11 +63,11 @@ namespace GGJ_2026.Machines
         {
             base.OnInteract();
             // Allow restart if finished, or toggle? 
-            // User flow: Interact -> Play 10s -> Freeze -> Interact to Close? Or Interact to Restart?
-            // "Makinadan çıkınca tekrardan o canvası kapatsın" -> implies OnExit closes.
-            // If we interact WHILE it's finished, maybe we restart?
             if (!_isMinigameActive)
             {
+                // ONE-TIME consumption check
+                if (!TryConsumeElectricity()) return;
+
                 StartMiniGame();
             }
         }
@@ -276,19 +275,6 @@ namespace GGJ_2026.Machines
             }
         }
 
-        private void ConsumeElectricityOverTime()
-        {
-            if (ResourceManager.Instance != null)
-            {
-                if (ResourceManager.Instance.GetElectricity() > 0)
-                {
-                    ResourceManager.Instance.ModifyElectricity(-_electricityConsumptionRate * Time.deltaTime);
-                }
-                else
-                {
-                    CloseMiniGameFully(); // Power cut aborts completely
-                }
-            }
-        }
+
     }
 }
