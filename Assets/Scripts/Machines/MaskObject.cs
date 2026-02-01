@@ -14,6 +14,8 @@ namespace GGJ_2026.Machines
         [SerializeField] private Transform _viewPoint;
         [SerializeField] private SpriteRenderer _iconRenderer;
 
+        [SerializeField] private TMPro.TMP_Text _descriptionText;
+
         [SerializeField] AudioClip selectMask; //
 
         private AudioSource _audioSource;
@@ -26,12 +28,41 @@ namespace GGJ_2026.Machines
             _audioSource = GetComponent<AudioSource>();
         }
 
+        private void Update()
+        {
+            // Billboard Effect: Always face the camera
+            if (_descriptionText != null && _descriptionText.gameObject.activeSelf)
+            {
+                // Simple billboard: face the camera position
+                // Rotate 180 if text is backward, or just use LookAt(camera)
+                // Often text needs to look AT camera but might be flipped. 
+                // Creating a standard LookAt.
+                _descriptionText.transform.LookAt(Camera.main.transform);
+                _descriptionText.transform.Rotate(0, 180, 0); // Corrects if text is mirrored
+            }
+        }
+
         public void Initialize(MaskData data)
         {
             _maskData = data;
-            if (_maskData != null && _iconRenderer != null)
+            if (_maskData != null)
             {
-                _iconRenderer.sprite = _maskData.Icon;
+                if (_iconRenderer != null)
+                    _iconRenderer.sprite = _maskData.Icon;
+                
+                if (_descriptionText != null)
+                {
+                    _descriptionText.text = _maskData.Description;
+                    _descriptionText.gameObject.SetActive(false); // Hide by default
+                }
+            }
+        }
+
+        public void SetDescriptionVisibility(bool visible)
+        {
+            if (_descriptionText != null)
+            {
+                _descriptionText.gameObject.SetActive(visible);
             }
         }
 
@@ -41,10 +72,6 @@ namespace GGJ_2026.Machines
 
             Debug.Log($"Picked Mask: {_maskData.MaskName}");
 
-            if (_audioSource != null && selectMask != null)
-            {
-                _audioSource.PlayOneShot(selectMask);
-            }
 
             // Confirm selection via Manager
             if (MaskManager.Instance != null)

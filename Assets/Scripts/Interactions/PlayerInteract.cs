@@ -124,12 +124,42 @@ namespace GGJ_2026.Interactions
             }
         }
 
+        private GGJ_2026.Machines.MaskObject _hoveredMask;
+
         private void HandleRaycast()
         {
             Ray ray = new Ray(_cam.transform.position, _cam.transform.forward);
             if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _interactionLayer))
             {
                 IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+                
+                // --- Mask Hover Logic ---
+                // Check if we hit a mask directly or parent
+                var maskObj = hit.collider.GetComponent<GGJ_2026.Machines.MaskObject>();
+                if (maskObj == null) maskObj = hit.collider.GetComponentInParent<GGJ_2026.Machines.MaskObject>();
+
+                if (maskObj != null)
+                {
+                    if (_hoveredMask != maskObj)
+                    {
+                        // Clean up old
+                        if (_hoveredMask != null) _hoveredMask.SetDescriptionVisibility(false);
+                        
+                        // Set new
+                        _hoveredMask = maskObj;
+                        _hoveredMask.SetDescriptionVisibility(true);
+                    }
+                }
+                else
+                {
+                    // Hit something else (or nothing relevant), clear mask hover
+                    if (_hoveredMask != null)
+                    {
+                        _hoveredMask.SetDescriptionVisibility(false);
+                        _hoveredMask = null;
+                    }
+                }
+                // ------------------------
 
                 if (interactable != null)
                 {
@@ -148,6 +178,12 @@ namespace GGJ_2026.Interactions
             else
             {
                 ClearInteraction();
+                // Clear Mask Hover if hitting nothing
+                if (_hoveredMask != null)
+                {
+                    _hoveredMask.SetDescriptionVisibility(false);
+                    _hoveredMask = null;
+                }
             }
         }
 

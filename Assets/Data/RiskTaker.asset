@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f37bb503d6d94595b9f1730ffeb66, type: 3}
   m_Name: RiskTaker
   m_EditorClassIdentifier: 
-  _maskName: Risk
-  _description: 
+  _maskName: Risk Taker
+  _description: A dangerous gamble for a quick rescue. Radio frequency fills 2x faster,
+    but the monster approaches 1.5x faster.
   _icon: {fileID: 21300000, guid: 2e77815a229b51c4fb332bdb08aa7e37, type: 3}
   _maskType: 3

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f37bb503d6d94595b9f1730ffeb66, type: 3}
   m_Name: FreeMedicine
   m_EditorClassIdentifier: 
-  _maskName: FreeMed
-  _description: 
+  _maskName: Free Medicine
+  _description: The dispenser's backup power cell is active. Using the Medicine Machine
+    consumes 0% electricity for the duration of the night.
   _icon: {fileID: 21300000, guid: cb1a6d1208af1dd4c9cc4ab1b94775f4, type: 3}
   _maskType: 6

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f37bb503d6d94595b9f1730ffeb66, type: 3}
   m_Name: MadnessPerk
   m_EditorClassIdentifier: 
-  _maskName: MadnessPEerk
-  _description: 
+  _maskName: Madness Perk
+  _description: Find clarity in the chaos of a collapsing mind. The lower your Sanity,
+    the faster the Radio frequency bar fills.
   _icon: {fileID: 21300000, guid: b60d31ea8c756954794ccf3f6502783c, type: 3}
   _maskType: 4

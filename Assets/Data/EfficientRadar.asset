@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f37bb503d6d94595b9f1730ffeb66, type: 3}
   m_Name: EfficientRadar
   m_EditorClassIdentifier: 
-  _maskName: Efficient
-  _description: 
+  _maskName: Efficient Radar
+  _description: Advanced circuitry prevents power surges. The Radar consumes minimal
+    electricity and will never trigger a fuse blowout.
   _icon: {fileID: 21300000, guid: d8d4d1560f5ce3149916b0e21df00df7, type: 3}
   _maskType: 2

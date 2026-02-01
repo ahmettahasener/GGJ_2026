@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f37bb503d6d94595b9f1730ffeb66, type: 3}
   m_Name: StrongPusher
   m_EditorClassIdentifier: 
-  _maskName: StrongPush
-  _description: 
+  _maskName: Strong Pusher
+  _description: Harnesses raw kinetic energy. Your Radar becomes significantly more
+    powerful, pushing the monster much further back.
   _icon: {fileID: 21300000, guid: fcafb6ce33e5cc442a65c1f25334a049, type: 3}
   _maskType: 1
