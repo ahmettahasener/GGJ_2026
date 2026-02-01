@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3521499870555766491}
   - component: {fileID: 3127710463092106786}
   - component: {fileID: 6304068244126964282}
+  - component: {fileID: 1929711796649943289}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -316,3 +317,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _jumpscareAudioS: {fileID: 0}
+--- !u!114 &1929711796649943289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2207176782497900549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3757303ca1383a149bef18fd1d6528a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _infoBoxPrefab: {fileID: 943600568430376920, guid: e49f9ed16317a1749aeff2d39393d015, type: 3}
+  _notificationContainer: {fileID: 0}
+  _electricityIcon: {fileID: 21300000, guid: 7ab127236ea37ef428012cb9fe09184f, type: 3}
+  _sanityIcon: {fileID: 21300000, guid: fa39027f8e609fd47b7b5f6951627ca7, type: 3}
+  _monsterIcon: {fileID: 21300000, guid: a55094001c01fed4abe684fd8b463228, type: 3}
+  _freqIcon: {fileID: 21300000, guid: 5c8e23f75e576aa43a8fdb945790adb8, type: 3}
+  _posColor: {r: 0, g: 1, b: 0, a: 1}
+  _negColor: {r: 1, g: 0, b: 0, a: 1}
+  _neutralColor: {r: 1, g: 1, b: 1, a: 1}

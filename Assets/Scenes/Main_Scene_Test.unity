@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1929711796649943289, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
+      propertyPath: _notificationContainer
+      value: 
+      objectReference: {fileID: 1969557996}
     - target: {fileID: 2207176782497900549, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
       propertyPath: m_Name
       value: Managers
@@ -250,10 +254,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2207176782497900549, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 562721652}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
 --- !u!1 &34528730
 GameObject:
@@ -890,32 +891,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &562721643 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2207176782497900549, guid: dfb4894224dbabd489c7fa540bbe2f0c, type: 3}
-  m_PrefabInstance: {fileID: 33128985}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &562721652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562721643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3757303ca1383a149bef18fd1d6528a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _infoBoxPrefab: {fileID: 943600568430376920, guid: e49f9ed16317a1749aeff2d39393d015, type: 3}
-  _notificationContainer: {fileID: 1969557996}
-  _electricityIcon: {fileID: 21300000, guid: 7ab127236ea37ef428012cb9fe09184f, type: 3}
-  _sanityIcon: {fileID: 21300000, guid: fa39027f8e609fd47b7b5f6951627ca7, type: 3}
-  _monsterIcon: {fileID: 21300000, guid: a55094001c01fed4abe684fd8b463228, type: 3}
-  _freqIcon: {fileID: 21300000, guid: 5c8e23f75e576aa43a8fdb945790adb8, type: 3}
-  _posColor: {r: 0, g: 1, b: 0, a: 1}
-  _negColor: {r: 1, g: 0, b: 0, a: 1}
-  _neutralColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!43 &567178606
 Mesh:
   m_ObjectHideFlags: 0

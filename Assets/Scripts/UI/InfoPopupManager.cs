@@ -59,14 +59,15 @@ namespace GGJ_2026.UI
         {
             string sign = amount >= 0 ? "+" : "";
             Color c = amount >= 0 ? _posColor : _negColor;
-            SpawnNotification($"{sign}{amount} Electricity", _electricityIcon, c);
+            // Use F0 to round to nearest integer
+            SpawnNotification($"{sign}{amount:F0} Electricity", _electricityIcon, c);
         }
 
         public void NotifySanity(float amount)
         {
             string sign = amount >= 0 ? "+" : "";
             Color c = amount >= 0 ? _posColor : _negColor;
-            SpawnNotification($"{sign}{amount} Sanity", _sanityIcon, c);
+            SpawnNotification($"{sign}{amount:F0} Sanity", _sanityIcon, c);
         }
 
         public void NotifyDistance(float amount) // +Distance is Good (Monster pushed back), -Distance is Bad? 
@@ -75,14 +76,14 @@ namespace GGJ_2026.UI
             // -30m is BAD (Closer).
             string sign = amount >= 0 ? "+" : "";
             Color c = amount >= 0 ? _posColor : _negColor;
-            SpawnNotification($"{sign}{amount}m Distance", _monsterIcon, c);
+            SpawnNotification($"{sign}{amount:F0}m Distance", _monsterIcon, c);
         }
 
         public void NotifyFrequency(float amount)
         {
              string sign = amount >= 0 ? "+" : "";
             Color c = amount >= 0 ? _posColor : _negColor;
-            SpawnNotification($"{sign}{amount}% Signal", _freqIcon, c);
+            SpawnNotification($"{sign}{amount:F0}% Signal", _freqIcon, c);
         }
 
         public void NotifyGeneric(string msg)
