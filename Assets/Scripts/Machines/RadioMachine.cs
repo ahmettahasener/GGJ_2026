@@ -268,6 +268,11 @@ namespace GGJ_2026.Machines
             {
                 ResourceManager.Instance.ModifyFrequency(reward);
                 Debug.Log($"Radio Reward: {reward:F1}% Freq (Success: {successRatio:P0})");
+
+                if (GGJ_2026.UI.InfoPopupManager.Instance != null)
+                {
+                    GGJ_2026.UI.InfoPopupManager.Instance.NotifyFrequency(reward);
+                }
             }
             if (_successTimer > _sessionDuration * 0.5f) // %50+ başarı
             {

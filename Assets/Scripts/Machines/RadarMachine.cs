@@ -213,6 +213,12 @@ namespace GGJ_2026.Machines
 
             // 1. Push Distance (always at least base amount)
             ResourceManager.Instance.ModifyDistance(pushAmount);
+            
+            if (GGJ_2026.UI.InfoPopupManager.Instance != null)
+            {
+                GGJ_2026.UI.InfoPopupManager.Instance.NotifyDistance(pushAmount);
+            }
+
             Debug.Log($"Radar Used: Monster pushed back {pushAmount:F1}m (Base: {_baseDistancePushAmount}, Bonus: {bonusAmount:F1}, Accuracy: {accuracy:P0})");
 
             // 2. Chance to Blow Fuse (regardless of accuracy)

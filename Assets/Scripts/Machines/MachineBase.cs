@@ -74,6 +74,12 @@ namespace GGJ_2026.Machines
                 {
                     ResourceManager.Instance.ModifyElectricity(-_electricityCost);
                     Debug.Log($"{_machineName} consumed {_electricityCost} electricity.");
+                    
+                    if (GGJ_2026.UI.InfoPopupManager.Instance != null)
+                    {
+                        GGJ_2026.UI.InfoPopupManager.Instance.NotifyElectricity(-_electricityCost);
+                    }
+
                     return true;
                 }
                 else

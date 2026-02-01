@@ -216,14 +216,17 @@ namespace GGJ_2026.Managers
                 // 1. Sanity Drop
                 float sanityDrop = 10f + UnityEngine.Random.Range(0f, 10f);
                 ResourceManager.Instance.ModifySanity(-sanityDrop);
+                if (GGJ_2026.UI.InfoPopupManager.Instance != null) GGJ_2026.UI.InfoPopupManager.Instance.NotifySanity(-sanityDrop);
 
                 // 2. Monster Approach
                 float baseMove = 100f + UnityEngine.Random.Range(0f, 50f);
                 float finalMove = baseMove * ResourceManager.Instance.MonsterAdvanceMultiplier;
                 ResourceManager.Instance.ModifyDistance(-finalMove);
+                if (GGJ_2026.UI.InfoPopupManager.Instance != null) GGJ_2026.UI.InfoPopupManager.Instance.NotifyDistance(-finalMove);
 
                 // 3. Refill Electricity
-                ResourceManager.Instance.RefillEnergyForNight(); 
+                ResourceManager.Instance.RefillEnergyForNight();
+                if (GGJ_2026.UI.InfoPopupManager.Instance != null) GGJ_2026.UI.InfoPopupManager.Instance.NotifyGeneric("Energy Refilled");
             }
         }
 
